@@ -18,6 +18,7 @@ import errorHandler from "./middleware/errorhandler.ts";
 
 // I M P O R T:  R O U T E S
 import usersRouter from "./routes/users.ts";
+// import postsRouter from "./routes/posts.ts";
 
 // ==============================================================
 
@@ -40,6 +41,9 @@ app.get("/favicon.ico", (req: Request, res: Response, next: NextFunction) => {
 
 // USERS
 app.use("/users", usersRouter);
+
+// POSTS
+// app.use("/posts", postsRouter);
 
 // WRONG PATH HANDLER
 app.use("*", invalidRoute);

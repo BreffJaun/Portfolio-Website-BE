@@ -14,15 +14,15 @@ import { validateRequest } from "../middleware/validator.ts";
 import {
   usersGetAll,
   usersPostUser,
-  // usersGetSpecific,
-  // usersPatchSpecific,
-  // usersDeleteSpecific,
+  usersGetSpecific,
+  usersPatchSpecific,
+  usersDeleteSpecific,
   usersPostLogin,
   usersGetLogout,
   usersChecklogin,
-  // verifyEmail,
-  // forgotPassword,
-  // setNewPassword,
+  verifyEmail,
+  forgotPassword,
+  setNewPassword,
 } from "../controller/usersController.ts";
 
 import { auth } from "../middleware/auth.ts";
@@ -49,21 +49,21 @@ router
 
 router
   .route("/:id")
-  // .get(objectIdValidator, auth, usersGetSpecific)
+  .get(objectIdValidator, auth, usersGetSpecific)
   .put(
     objectIdValidator,
     auth,
     userUpdateValidator,
-    validateRequest
-    // usersPatchSpecific
-  );
-// .delete(objectIdValidator, auth, usersDeleteSpecific);
+    validateRequest,
+    usersPatchSpecific
+  )
+  .delete(objectIdValidator, auth, usersDeleteSpecific);
 
 // Password management routes
-// router.route("/forgotpassword").post(forgotPassword);
-// router.route("/resetpassword/:token").post(setNewPassword);
+router.route("/forgotpassword").post(forgotPassword);
+router.route("/resetpassword/:token").post(setNewPassword);
 
 // Email verification route
-// router.route("/verify/:token").get(verifyEmail);
+router.route("/verify/:token").get(verifyEmail);
 
 export default router;

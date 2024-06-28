@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 import { Types } from "mongoose";
 
 // I M P O R T:  T Y P E S
-import type { User } from "../types/interfaces.ts";
+import type { User } from "../types/interfaces";
 
 // S C H E M A  -  D A T A   S T R U C T U R E
 export interface UserDocument extends User, Document {}
