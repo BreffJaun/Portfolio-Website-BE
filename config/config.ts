@@ -20,9 +20,12 @@ export const PORT = process.env.PORT || 4000;
 export const JWT_KEY = process.env.SECRET_JWT_KEY || "DefaultValue";
 export const JWT_EXPIRATION = process.env.SECRET_JWT_EXPIRATION || "1h";
 
+// C L O U D I N A R Y   K E Y S
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+
 // N O D E M A I L E R   K E Y S
-export const SENDER_MAIL = process.env.SENDER_MAIL;
-export const GMAIL_APP_PASS = process.env.GMAIL_APP_PASS;
 
 // C O R S  S E T T I N G S
 const CORS_ORIGINS = process.env.CORS_ORIGINS

@@ -1,21 +1,24 @@
 // I M P O R T   D E P E N D E N C I E S
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface User {
-  firstName: string;
-  lastName: string;
   email: string;
   password: string;
-  avatar?: string;
-  isAdmin: boolean;
-  isVerified: boolean;
-  isVerifiedTCP: boolean;
 }
 
 export interface PatchUser {
-  firstName?: string;
-  lastName?: string;
   email?: string;
   password?: string;
-  avatar?: string;
+}
+
+export interface Post extends Document {
+  _id: Types.ObjectId;
+  avatar: string;
+  authorAction: string;
+  date: string;
+  mood: string;
+  articleTitle: string;
+  articleContent: string;
+  articleImageSrc: string;
+  articleLink?: string;
 }
