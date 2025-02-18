@@ -11,18 +11,20 @@ export interface UserDocument extends User, Document {}
 const userSchema = new Schema<UserDocument>(
   {
     email: { type: String, required: false, unique: true },
-    password: { type: String, required: true },
-    _id: Types.ObjectId,
+    password: { type: String, required: true, select: false },
+    userName: { type: String, required: true },
+    avatar: { type: String, required: false },
   },
   { strictQuery: true }
 );
 
 // Hidden properties of Mongoose Objects in the Node.js JSON Responses (Responses)
-userSchema.methods.toJSON = function (this: UserDocument) {
-  const obj = this.toObject();
-  delete obj.password;
-  return obj;
-};
+// userSchema.methods.toJSON = function (this: UserDocument) {
+//   const obj = this.toObject();
+//   const userName = obj.userName;
+//   delete obj.password;
+//   return obj;
+// };
 
 // M O D E L - T E M P L A T E   F O R   D B   E N T R I E S
 const UserModel = model<UserDocument>("User", userSchema, "users");

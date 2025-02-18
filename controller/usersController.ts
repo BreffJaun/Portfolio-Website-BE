@@ -1,21 +1,23 @@
 // I M P O R T:  E X T E R N A L  D E P E N D E N C I E S
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
 import type { Request, Response, NextFunction } from "express";
 
 // I M P O R T:  T Y P E S
 // import type { PatchUser } from "../types/interfaces";
-// import { Types } from "mongoose";
+import { Types } from "mongoose";
 
 // I M P O R T:  F U N C T I O N S
 import UserModel from "../models/userModel.ts";
 import type { UserDocument } from "../models/userModel.ts";
-// import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
+import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
 // import { decodeToken } from "../middleware/auth.ts";
 import { nextCustomError } from "../middleware/errorhandler.ts";
+import { addFile } from "../services/media/cloudinary.ts";
 
 // I M P O R T:  E N V  O P T I O N S
-import { JWT_KEY, BE_HOST, cookieAge } from "../config/config.ts";
+import { JWT_KEY, BE_HOST, cookieAge, allowedMails } from "../config/config.ts";
 import { createVerifyToken } from "../services/jwt/jwt.ts";
 
 //========================
@@ -42,15 +44,37 @@ export const usersPostUser = async (
   try {
     const kof = "registration"; // kof => "kind of function"
     const newUser = req.body;
+    console.log(newUser);
+    if (!allowedMails.includes(newUser.email)) {
+      return nextCustomError("This email is not allowed!", 401, next);
+    }
     const hashedPassword = await bcrypt.hash(newUser.password, 10);
     const createdUser = await UserModel.create({
       ...newUser,
       password: hashedPassword,
     });
 
+    // AVATAR IMPLEMENT BEGIN //
+    if (req.file) {
+      console.log("req.file: ", req.file);
+      await addFile(
+        req.file,
+        UserModel,
+        createdUser._id as Types.ObjectId,
+        "avatar",
+        next
+      );
+    }
+    // AVATAR IMPLEMENT END //
+
+    // VERIFY EMAIL IMPLEMENT BEGIN //
+    // await sendMail(createdUser, kof);
+    await sendMail(createdUser.toObject(), kof);
+    // VERIFY EMAIL IMPLEMENT END //
+
     res.status(201).json({
       message: "User created successfully",
-      newUser: createdUser,
+      // newUser: createdUser,
     });
   } catch (err) {
     next(err);

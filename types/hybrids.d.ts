@@ -4,14 +4,14 @@ const userFromDb: Document<
   unknown,
   {},
   {
-    firstName: string;
-    lastName: string;
+    userName: string;
+    avatar: string;
     email: string;
     password: string;
   }
 > & {
-  firstName: string;
-  lastName: string;
+  userName: string;
+  avatar: string;
   email: string;
   password: string;
   _id: Types.ObjectId;

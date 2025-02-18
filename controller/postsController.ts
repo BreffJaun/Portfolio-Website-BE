@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 // import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 // I M P O R T:  T Y P E S
 import type { PatchUser } from "../types/interfaces";
@@ -46,11 +46,23 @@ export const createPost = async (
 
     // POSTIMAGE IMPLEMENT BEGIN //
     if (req.file) {
-      // INSERT (req.file, needed Model, associated type, next );
-      await addFile(req.file, PostModel as Model<Post>, createdPost._id, next);
+      // INSERT (
+      // req.file,
+      // needed Model,
+      // associated type,
+      // name of attribute where it will be saved in the model,
+      // next
+      // );
+      await addFile(
+        req.file,
+        PostModel as Model<Post>,
+        createdPost._id,
+        "articleImageSrc",
+        next
+      );
     }
     // POSTIMAGE IMPLEMENT END //
-    // console.log("Created Post:", createdPost);
+    console.log("Created Post:", createdPost);
 
     res.status(201).json({
       message: "Created post successfully",
@@ -69,7 +81,7 @@ export const postPatch = async (
   next: NextFunction
 ) => {
   try {
-    //   _id: Types.ObjectId;
+    // _id: Types.ObjectId;
     // avatar: string;
     // authorAction: string;
     // date: string;
@@ -78,46 +90,53 @@ export const postPatch = async (
     // articleContent: string;
     // articleImageSrc: string;
     // articleLink?: string;
-    
-    try {
-      const { id } = req.params;
-      const newPostData = JSON.parse(req.body.data);
-      const post = await PostModel.findById(id);
+    const { id } = req.params;
+    const newPostData = JSON.parse(req.body.data);
+    const post = await PostModel.findById(id);
 
-      const editedPost = await PostModel.findByIdAndUpdate(
-        id,
-        newPostData,
-        { new: true }
-      );
+    const editedPost = await PostModel.findByIdAndUpdate(id, newPostData, {
+      new: true,
+    });
 
-      // POSTIMAGE IMPLEMENT BEGIN //
+    // POSTIMAGE IMPLEMENT BEGIN //
     if (req.file) {
-      // INSERT (req.file, needed Model, associated type, next );
-      await addFile(req.file, PostModel as Model<Post>, id, next);
+      // INSERT (
+      // req.file,
+      // needed Model,
+      // associated type,
+      // name of attribute where it will be saved in the model,
+      // next
+      // );
+      await addFile(
+        req.file,
+        PostModel as Model<Post>,
+        id,
+        "articleImageSrc",
+        next
+      );
     }
     // POSTIMAGE IMPLEMENT END //
     // console.log("Created Post:", createdPost);
 
-      restOfTheTeam.map(async (member) => {
-        const notification = await NotificationModel.create({
-          receiver: member,
-          notText:
-            editedStone.kind === "stepstone"
-              ? `${userName} edited a stepstone in ${project.name}`
-              : editedStone.kind === "milestone"
-              ? `${userName} edited a milestone in ${project.name}`
-              : `${userName} edited the endstone of ${project.name}`,
-        });
-        await UserModel.findByIdAndUpdate(member, {
-          $push: { notifications: notification._id },
-        });
+    restOfTheTeam.map(async (member) => {
+      const notification = await NotificationModel.create({
+        receiver: member,
+        notText:
+          editedStone.kind === "stepstone"
+            ? `${userName} edited a stepstone in ${project.name}`
+            : editedStone.kind === "milestone"
+            ? `${userName} edited a milestone in ${project.name}`
+            : `${userName} edited the endstone of ${project.name}`,
       });
-      res.status(201).json({
-        message: "your stone is successfully updated",
-        status: true,
-        data: editedStone,
+      await UserModel.findByIdAndUpdate(member, {
+        $push: { notifications: notification._id },
       });
-    }
+    });
+    res.status(201).json({
+      message: "your stone is successfully updated",
+      status: true,
+      data: editedStone,
+    });
   } catch (error) {
     next();
   }

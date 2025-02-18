@@ -31,21 +31,21 @@ import { admin } from "../middleware/admin.ts";
 // ========================
 
 // D E F I N E   M U L T E R   I N S T A N C E
-const upload = multer({ dest: "uploads/" });
+import { uploadMedia, uploadAvatar } from "../services/media/multer.ts";
 
 // C R E A T E   R O U T E S
 const router = express.Router();
 
 // Authentication routes
+router
+  .route("/register")
+  .post(uploadAvatar, userValidator, validateRequest, usersPostUser);
 router.route("/login").post(usersPostLogin);
 router.route("/logout").get(usersGetLogout);
 router.route("/checklogin").get(usersChecklogin);
 
 // User management routes
-router
-  .route("/")
-  .get(auth, admin, usersGetAll)
-  .post(upload.single("avatar"), userValidator, validateRequest, usersPostUser);
+router.route("/").get(auth, admin, usersGetAll);
 
 router
   .route("/:id")

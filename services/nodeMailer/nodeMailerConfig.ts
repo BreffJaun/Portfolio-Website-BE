@@ -7,7 +7,7 @@ import type { userFromDb } from "../../types/hybrids.d.ts";
 import type { KofType } from "../../types/types.ts";
 
 // I M P O R T:  E N V  O P T I O N S
-import { SENDER_MAIL, GMAIL_APP_PASS } from "../../config/config.js";
+import { SENDER_MAIL, SENDER_PASS } from "../../config/config.js";
 import { MAIL_SUBJECT, generateMailHtml } from "./nodeMailerContent.ts";
 
 // I M P O R T:   S E R V I C E S
@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: SENDER_MAIL,
-    pass: GMAIL_APP_PASS,
+    pass: SENDER_PASS,
   },
   tls: {
     minVersion: "TLSv1.2",

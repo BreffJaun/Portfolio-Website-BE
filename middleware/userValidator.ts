@@ -16,6 +16,12 @@ export const userValidator = [
     .isStrongPassword()
     .withMessage("Password isn't safe enough!")
     .isLength({ min: 8 }),
+  body("userName")
+    .notEmpty()
+    .withMessage("Username has to be set!")
+    .trim()
+    .isLength({ min: 3 }),
+  body("avatar").trim(),
 ];
 
 export const userUpdateValidator = [

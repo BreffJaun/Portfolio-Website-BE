@@ -4,6 +4,8 @@ import { Document, Types } from "mongoose";
 export interface User {
   email: string;
   password: string;
+  userName: string;
+  avatar: string;
 }
 
 export interface PatchUser {

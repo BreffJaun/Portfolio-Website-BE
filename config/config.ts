@@ -7,6 +7,10 @@ import "dotenv/config";
 export const BE_HOST = process.env.BE_HOST;
 export const FE_HOST = process.env.FE_HOST;
 
+//  D I V E R S E   S E T T I N G S
+const ALLOWED_MAIL_01 = process.env.ALLOWED_MAIL_01;
+export const allowedMails = [ALLOWED_MAIL_01];
+
 // D B  C O N N E C T I O N  S T R I N G
 const { DB_USER, DB_PASS, DB_HOST, DB_NAME } = process.env;
 export const MONGO_DB_CONNECTION_STRING =
@@ -26,6 +30,8 @@ export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 
 // N O D E M A I L E R   K E Y S
+export const SENDER_MAIL = process.env.SENDER_MAIL;
+export const SENDER_PASS = process.env.SENDER_PASS;
 
 // C O R S  S E T T I N G S
 const CORS_ORIGINS = process.env.CORS_ORIGINS

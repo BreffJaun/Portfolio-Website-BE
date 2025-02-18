@@ -72,7 +72,7 @@ export const generateMailHtml = (
             <h1>Account Verifizierung / Account Verification</h1>
           </div>
           <div class="content">
-            <p>Hallo ${user.firstName} ${user.lastName},</p>
+            <p>Hallo ${user.userName},</p>
             <p>Vielen Dank, dass Sie sich für unseren Service registriert haben. Um Ihren Account zu verifizieren, klicken Sie bitte auf den Link am Ende dieser E-Mail.</p>
             <p>Wenn Sie diesen E-Mail-Link nicht angefordert haben, ignorieren Sie bitte diese E-Mail.</p>
             <p>Vielen Dank und herzlich willkommen bei uns!</p>
@@ -83,7 +83,7 @@ export const generateMailHtml = (
           <hr>
 
           <div class="content">
-            <p>Hello ${user.firstName} ${user.lastName},</p>
+            <p>Hello ${user.userName},</p>
             <p>Thank you for registering with our service. To verify your account, please click on the link at the bottom of this email.</p>
             <p>If you did not request this email link, please ignore this email.</p>
             <p>Thank you and welcome to us!</p>
@@ -151,7 +151,7 @@ export const generateMailHtml = (
             <h1>Passwort Zurücksetzen / Password Reset</h1>
           </div>
           <div class="content">
-            <p>Hallo ${user.firstName} ${user.lastName},</p>
+            <p>Hallo ${user.userName},</p>
             <p>Um Ihr Passwort zurückzusetzen, klicken Sie bitte auf den Link am Ende dieser E-Mail.</p>
             <p>Wenn Sie diesen E-Mail-Link nicht angefordert haben, ignorieren Sie bitte diese E-Mail.</p>
             <p>Mit freundlichen Grüßen,</p>
@@ -161,7 +161,7 @@ export const generateMailHtml = (
           <hr>
 
           <div class="content">
-            <p>Hello ${user.firstName} ${user.lastName},</p>
+            <p>Hello ${user.userName},</p>
             <p>To reset your password, please click on the link at the bottom of this email.</p>
             <p>If you did not request this email link, please ignore this email.</p>
             <p>Best regards,</p>

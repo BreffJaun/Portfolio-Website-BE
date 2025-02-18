@@ -40,13 +40,13 @@ app.get("/favicon.ico", (req: Request, res: Response, next: NextFunction) => {
 });
 
 // USERS
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 
 // POSTS
 // app.use("/posts", postsRouter);
 
 // WRONG PATH HANDLER
-app.use("*", invalidRoute);
+app.use("/api/*", invalidRoute);
 
 // ERROR HANDLER
 app.use(errorHandler);

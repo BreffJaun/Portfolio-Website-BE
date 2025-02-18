@@ -1,11 +1,14 @@
 // I M P O R T:  E X T E R N A L  D E P E N D E N C I E S
 import * as url from "url";
+import * as path from "path"; // * nachträglich hinzugefügt
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 import { v2 as cloudinary } from "cloudinary";
+// import * as cloudinary from "cloudinary";
+
 import { unlink } from "fs/promises";
 import { Model, Types } from "mongoose";
 import type { NextFunction } from "express";
-import type { Post } from "../../types/interfaces";
+// import type { Post } from "../../types/interfaces";
 
 // I M P O R T:  F U N C T I O N S
 import { nextCustomError } from "../../middleware/errorhandler";
@@ -31,44 +34,80 @@ export const addFile = async (
   file: Express.Multer.File,
   model: Model<any>,
   postId: Types.ObjectId,
+  modelFileAttribute: string,
   next: NextFunction
 ) => {
-  if (file) {
-    const allowedMimetypes = [
-      "png",
-      "jpg",
-      "jpeg",
-      "tiff",
-      "gif",
-      "bmp",
-      "mp4",
-      "mov",
-      "wmv",
-      "avi",
-      "mkv",
-      "flv",
-      "octet-stream",
-    ];
+  const allowedMimetypes = [
+    "png",
+    "jpg",
+    "jpeg",
+    "tiff",
+    "gif",
+    "bmp",
+    "mp4",
+    "mov",
+    "wmv",
+    "avi",
+    "mkv",
+    "flv",
+    "octet-stream",
+  ];
 
-    if (!file || !allowedMimetypes.some((el) => file.mimetype.includes(el))) {
-      return nextCustomError("Unsupported file type", 400, next);
-    }
+  if (!file || !allowedMimetypes.some((el) => file.mimetype.includes(el))) {
+    return nextCustomError("Unsupported file type", 400, next);
+  }
 
-    try {
-      const absFilePath = `${__dirname}/../${file.path}`;
-      const response = await cloudinary.uploader.upload(absFilePath, {
-        resource_type: "auto",
-        use_filename: true,
-      });
+  try {
+    const absFilePath = `${__dirname}/../../${file.path}`;
+    // console.log("__dirname: ", __dirname);
+    // console.log("file.path: ", file.path);
+    // console.log("absFilePath: ", absFilePath);
+    const response = await cloudinary.uploader.upload(absFilePath, {
+      resource_type: "auto",
+      use_filename: true,
+    });
 
-      await unlink(absFilePath);
+    await unlink(absFilePath);
 
-      await model.findByIdAndUpdate(postId, {
-        media: response.secure_url,
+    await model.findByIdAndUpdate(
+      postId,
+      {
+        [modelFileAttribute]: response.secure_url,
         contentType: file.mimetype,
-      });
-    } catch (err) {
-      return nextCustomError("Error uploading file to Cloudinary", 500, next);
+      },
+      { new: true }
+    );
+  } catch (err) {
+    // console.error("Cloudinary Upload Error: ", err);
+    return nextCustomError("Error uploading file to Cloudinary", 500, next);
+  }
+};
+
+export const extractPublicIdFromUrl = (secureUrl: string) => {
+  const regex =
+    /https:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/v\d+\/(.+)/;
+  const match = secureUrl.match(regex);
+  return match ? match[1] : null;
+};
+
+export const deleteFileFromCloudinary = async (
+  secureUrl: string,
+  next: NextFunction
+) => {
+  try {
+    const publicId = extractPublicIdFromUrl(secureUrl);
+    console.log("publicId: ", publicId);
+
+    if (!publicId) {
+      return nextCustomError("Keine PublicID gefunden.", 404, next);
     }
+
+    // Löschen der Datei mit der PublicID
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    console.log(`Datei ${publicId} wurde erfolgreich gelöscht.`);
+    return result;
+  } catch (error) {
+    return nextCustomError(`Fehler beim Löschen der Datei:`, 500, next);
   }
 };
