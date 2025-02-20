@@ -20,7 +20,7 @@ import {
   usersPostLogin,
   usersGetLogout,
   usersChecklogin,
-  // verifyEmail,
+  verifyEmail,
   // forgotPassword,
   // setNewPassword,
 } from "../controller/usersController.ts";
@@ -64,6 +64,6 @@ router
 // router.route("/resetpassword/:token").post(setNewPassword);
 
 // Email verification route
-// router.route("/verify/:token").get(verifyEmail);
+router.route("/verify/:token").get(verifyEmail);
 
 export default router;

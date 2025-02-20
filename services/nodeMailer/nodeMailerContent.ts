@@ -94,7 +94,7 @@ export const generateMailHtml = (
           <hr>
 
           <div class="content">
-            <p><a href="${BE_HOST}users/verify/${verifyToken}">Klicken Sie hier, um Ihren Account zu verifizieren | Click here to verify your account</a></p>
+            <p><a href="${BE_HOST}api/users/verify/${verifyToken}">Klicken Sie hier, um Ihren Account zu verifizieren | Click here to verify your account</a></p>
           </div>
       </div>
     </body>
@@ -171,7 +171,7 @@ export const generateMailHtml = (
           <hr>
 
           <div class="content">
-            <p><a href="${BE_HOST}users/resetpassword/${verifyToken}">Klicken Sie hier, um Ihr Passwort zurückzusetzen | Click here to reset your password</a></p>
+            <p><a href="${BE_HOST}api/users/resetpassword/${verifyToken}">Klicken Sie hier, um Ihr Passwort zurückzusetzen | Click here to reset your password</a></p>
           </div>
       </div>
     </body>

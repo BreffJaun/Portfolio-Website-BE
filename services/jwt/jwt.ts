@@ -22,3 +22,20 @@ export const createVerifyToken = (user: UserDocument) => {
     throw new CustomError("Failed to create JWT token", 500);
   }
 };
+
+export const decodeToken = (token: string, JWT_KEY: string) => {
+  try {
+    return jwt.verify(token, JWT_KEY);
+  } catch (err) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "message" in err &&
+      typeof err.message === "string"
+    ) {
+      throw new CustomError(err.message, 400);
+    } else {
+      throw new CustomError("An unexpected error occurred.", 500);
+    }
+  }
+};

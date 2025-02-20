@@ -6,6 +6,7 @@ export interface User {
   password: string;
   userName: string;
   avatar: string;
+  isVerified: boolean;
 }
 
 export interface PatchUser {

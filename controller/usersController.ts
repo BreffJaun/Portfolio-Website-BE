@@ -15,10 +15,11 @@ import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
 // import { decodeToken } from "../middleware/auth.ts";
 import { nextCustomError } from "../middleware/errorhandler.ts";
 import { addFile } from "../services/media/cloudinary.ts";
+import { createVerifyToken } from "../services/jwt/jwt.ts";
+import { decodeToken } from "../middleware/auth.ts";
 
 // I M P O R T:  E N V  O P T I O N S
 import { JWT_KEY, BE_HOST, cookieAge, allowedMails } from "../config/config.ts";
-import { createVerifyToken } from "../services/jwt/jwt.ts";
 
 //========================
 
@@ -44,7 +45,8 @@ export const usersPostUser = async (
   try {
     const kof = "registration"; // kof => "kind of function"
     const newUser = req.body;
-    console.log(newUser);
+    newUser.isVerified = false;
+    // console.log("newUser: ", newUser);
     if (!allowedMails.includes(newUser.email)) {
       return nextCustomError("This email is not allowed!", 401, next);
     }
@@ -56,7 +58,7 @@ export const usersPostUser = async (
 
     // AVATAR IMPLEMENT BEGIN //
     if (req.file) {
-      console.log("req.file: ", req.file);
+      // console.log("req.file: ", req.file);
       await addFile(
         req.file,
         UserModel,
@@ -82,31 +84,32 @@ export const usersPostUser = async (
 };
 
 // GET Verify new User via Email
-// export const verifyEmail = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { token } = req.params;
-//     let decodedToken = decodeToken(token, JWT_KEY);
-//     if (
-//       typeof decodedToken === "object" &&
-//       decodedToken !== null &&
-//       "id" in decodedToken
-//     ) {
-//       const id = decodedToken._id;
-//       const user = await UserModel.findByIdAndUpdate(id, { isVerified: true });
-//       res.status(200).json({ message: "E-Mail is now SUCCESSFULLY verified!" });
-//     } else {
-//       nextCustomError("Invalid token format.", 400, next);
-//     }
-//     // res.redirect('http://localhost:2404/login')
-//     // if we have a frontend, we can redirect the successful verification to the login page
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+export const verifyEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token } = req.params;
+    let decodedToken = decodeToken(token, JWT_KEY);
+    if (
+      typeof decodedToken === "object" &&
+      decodedToken !== null &&
+      "_id" in decodedToken
+    ) {
+      const id = decodedToken._id;
+      const user = await UserModel.findByIdAndUpdate(id, { isVerified: true });
+      // res.status(200).json({ message: "E-Mail is now SUCCESSFULLY verified!" });
+      res.redirect("http://localhost:5173/login");
+    } else {
+      nextCustomError("Invalid token format.", 400, next);
+    }
+    // res.redirect("http://localhost:2404/login");
+    // if we have a frontend, we can redirect the successful verification to the login page
+  } catch (err) {
+    next(err);
+  }
+};
 
 // POST Request email for forgotten password
 // export const forgotPassword = async (

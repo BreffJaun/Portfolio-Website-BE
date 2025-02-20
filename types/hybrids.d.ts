@@ -8,11 +8,13 @@ const userFromDb: Document<
     avatar: string;
     email: string;
     password: string;
+    isVerified: boolean;
   }
 > & {
   userName: string;
   avatar: string;
   email: string;
   password: string;
+  isVerified: boolean;
   _id: Types.ObjectId;
 };
