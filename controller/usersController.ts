@@ -19,7 +19,13 @@ import { createVerifyToken } from "../services/jwt/jwt.ts";
 import { decodeToken } from "../middleware/auth.ts";
 
 // I M P O R T:  E N V  O P T I O N S
-import { JWT_KEY, BE_HOST, cookieAge, allowedMails } from "../config/config.ts";
+import {
+  JWT_KEY,
+  BE_HOST,
+  FE_HOST,
+  cookieAge,
+  allowedMails,
+} from "../config/config.ts";
 
 //========================
 
@@ -36,7 +42,7 @@ export const usersGetAll = async (
   }
 };
 
-// POST (Add) a new User
+// POST (Add) a new User ✅
 export const usersPostUser = async (
   req: Request,
   res: Response,
@@ -83,7 +89,7 @@ export const usersPostUser = async (
   }
 };
 
-// GET Verify new User via Email
+// GET Verify new User via Email ✅
 export const verifyEmail = async (
   req: Request,
   res: Response,
@@ -100,7 +106,7 @@ export const verifyEmail = async (
       const id = decodedToken._id;
       const user = await UserModel.findByIdAndUpdate(id, { isVerified: true });
       // res.status(200).json({ message: "E-Mail is now SUCCESSFULLY verified!" });
-      res.redirect("http://localhost:5173/login");
+      res.redirect(`${FE_HOST}/login`);
     } else {
       nextCustomError("Invalid token format.", 400, next);
     }
@@ -302,7 +308,7 @@ export const usersPostLogin = async (
     const userData = req.body;
     const userFromDb: UserDocument | null = await UserModel.findOne({
       email: userData.email,
-    });
+    }).select("+password"); // select password from db
     if (!userFromDb) {
       return nextCustomError("There is no user with this email!", 401, next);
     }
@@ -317,8 +323,14 @@ export const usersPostLogin = async (
     }
 
     const token = createVerifyToken(userFromDb);
+
+    // Passwort löschen
+    const userWithoutPassword = userFromDb.toObject();
+    delete userWithoutPassword.password;
+
     // INSERT COOKIE CODE BEGIN //
     res
+      .status(201)
       .cookie("loginCookie", token, {
         maxAge: cookieAge.oneHour,
         httpOnly: true,
@@ -329,6 +341,7 @@ export const usersPostLogin = async (
         auth: "loggedin",
         email: userFromDb.email,
         message: "Login SUCCESSFUL!",
+        user: userWithoutPassword,
       });
     // INSERT COOKIE CODE END //
   } catch (err) {
@@ -346,7 +359,9 @@ export const usersChecklogin = async (
     const token = req.cookies.loginCookie;
     try {
       const tokenDecoded = jwt.verify(token, JWT_KEY);
-      res.status(200).json({ message: "User is logged in." });
+      const userId = (tokenDecoded as jwt.JwtPayload)._id;
+      const user = await UserModel.findById(userId).select("-password");
+      res.status(200).json({ message: "User is logged in.", user: user });
     } catch (err) {
       if (err instanceof jwt.TokenExpiredError) {
         nextCustomError("Token has expired. Please log in again.", 401, next);
