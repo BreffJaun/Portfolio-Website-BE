@@ -101,7 +101,7 @@ export const deleteFileFromCloudinary = async (
 ) => {
   try {
     const publicId = extractPublicIdFromUrl(secureUrl);
-    console.log("publicId: ", publicId);
+    // console.log("publicId: ", publicId);
 
     if (!publicId) {
       return nextCustomError("Keine PublicID gefunden.", 404, next);
