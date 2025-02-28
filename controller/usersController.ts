@@ -307,7 +307,6 @@ export const usersPatchSpecific = async (
     if (!updatedUser) {
       return nextCustomError("User not found!", 404, next);
     }
-    console.log("updatedUser: ", updatedUser);
     res.status(200).json(updatedUser);
   } catch (err) {
     next(err);

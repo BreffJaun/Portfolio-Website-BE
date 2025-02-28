@@ -87,10 +87,10 @@ export const extractPublicIdFromUrl = (secureUrl: string) => {
   const regex = /\/upload\/(?:v\d+\/)?([^\/]+)$/;
   const match = secureUrl.match(regex);
   if (match) {
-    console.log("Extracted Public ID:", match[1]);
+    // console.log("Extracted Public ID:", match[1]);
     return match[1].replace(/\.[^.]+$/, "");
   } else {
-    console.log("No match found for URL:", secureUrl);
+    // console.log("No match found for URL:", secureUrl);
     return null;
   }
 };
