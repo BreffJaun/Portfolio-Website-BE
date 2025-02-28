@@ -84,10 +84,15 @@ export const addFile = async (
 };
 
 export const extractPublicIdFromUrl = (secureUrl: string) => {
-  const regex =
-    /https:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/v\d+\/(.+)/;
+  const regex = /\/upload\/(?:v\d+\/)?([^\/]+)$/;
   const match = secureUrl.match(regex);
-  return match ? match[1] : null;
+  if (match) {
+    console.log("Extracted Public ID:", match[1]);
+    return match[1].replace(/\.[^.]+$/, "");
+  } else {
+    console.log("No match found for URL:", secureUrl);
+    return null;
+  }
 };
 
 export const deleteFileFromCloudinary = async (
@@ -102,10 +107,9 @@ export const deleteFileFromCloudinary = async (
       return nextCustomError("Keine PublicID gefunden.", 404, next);
     }
 
-    // Löschen der Datei mit der PublicID
     const result = await cloudinary.uploader.destroy(publicId);
 
-    console.log(`Datei ${publicId} wurde erfolgreich gelöscht.`);
+    // console.log(`Datei ${publicId} wurde erfolgreich gelöscht.`);
     return result;
   } catch (error) {
     return nextCustomError(`Fehler beim Löschen der Datei:`, 500, next);

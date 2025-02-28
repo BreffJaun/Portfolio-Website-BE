@@ -15,7 +15,7 @@ import {
   usersGetAll,
   usersPostUser,
   // usersGetSpecific,
-  // usersPatchSpecific,
+  usersPatchSpecific,
   // usersDeleteSpecific,
   usersPostLogin,
   usersGetLogout,
@@ -50,12 +50,13 @@ router.route("/").get(auth, admin, usersGetAll);
 router
   .route("/:id")
   // .get(objectIdValidator, auth, usersGetSpecific)
-  .put(
+  .patch(
+    uploadAvatar,
     objectIdValidator,
     auth,
     userUpdateValidator,
-    validateRequest
-    // usersPatchSpecific
+    validateRequest,
+    usersPatchSpecific
   );
 // .delete(objectIdValidator, auth, usersDeleteSpecific);
 

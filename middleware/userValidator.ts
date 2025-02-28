@@ -31,13 +31,19 @@ export const userUpdateValidator = [
     .trim()
     .isEmail()
     .normalizeEmail(),
-  body("password")
+  // body("password")
+  //   // .notEmpty()
+  //   .withMessage("Password has to bet set!")
+  //   .trim()
+  //   .isStrongPassword()
+  //   .withMessage("Password isn't safe enough!")
+  //   .isLength({ min: 8 }),
+  body("userName")
     .notEmpty()
-    .withMessage("Password has to bet set!")
+    .withMessage("Username has to be set!")
     .trim()
-    .isStrongPassword()
-    .withMessage("Password isn't safe enough!")
-    .isLength({ min: 8 }),
+    .isLength({ min: 3 }),
+  body("avatar").trim(),
 ];
 
 // normalize() => changes all chars to lowerCase

@@ -11,10 +11,15 @@ import { Types } from "mongoose";
 // I M P O R T:  F U N C T I O N S
 import UserModel from "../models/userModel.ts";
 import type { UserDocument } from "../models/userModel.ts";
+import type { PatchUser } from "../types/interfaces.ts";
 import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
 // import { decodeToken } from "../middleware/auth.ts";
 import { nextCustomError } from "../middleware/errorhandler.ts";
-import { addFile } from "../services/media/cloudinary.ts";
+import {
+  addFile,
+  extractPublicIdFromUrl,
+  deleteFileFromCloudinary,
+} from "../services/media/cloudinary.ts";
 import { createVerifyToken } from "../services/jwt/jwt.ts";
 import { decodeToken } from "../middleware/auth.ts";
 
@@ -211,69 +216,103 @@ export const verifyEmail = async (
 //   }
 // };
 
-// GET a specific User
-// export const usersGetSpecific = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     if (!(await UserModel.findById(req.params.id))) {
-//       nextCustomError("No USER with this id in Database!", 442, next);
-//     }
-//     res.status(200).json(await UserModel.findById(req.params.id));
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+// PATCH (Update) specific User ✅
+export const usersPatchSpecific = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const { userName, email, password, newPassword } = req.body;
+    const updates: PatchUser = {};
+    const userFromDb = await UserModel.findById(id).select("+password");
 
-// PATCH (Update) specific User
-// export const usersPatchSpecific = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { id } = req.params;
-//     const { firstName, lastName, email, password, avatar } = req.body;
-//     const updates: PatchUser = {};
+    // CHECK IF USER EXISTS
+    if (!userFromDb) {
+      return nextCustomError("User not found!", 404, next);
+    }
 
-//     if (id !== req.token.userId) {
-//       nextCustomError("Not Authorized!", 401, next);
-//     }
+    // CHECK IF USER IS AUTHORIZED
+    if (id !== req.token._id) {
+      return nextCustomError("Not Authorized!", 401, next);
+    }
 
-//     if (firstName) updates.firstName = firstName;
-//     if (lastName) updates.lastName = lastName;
+    // AKTUALIZE USER NAME
+    if (userName) {
+      updates.userName = userName;
+    }
 
-//     if (email) {
-//       const userFromDb = await UserModel.find({ email }, { _id: { $ne: id } });
-//       if (userFromDb.length > 0) {
-//         nextCustomError("There is already a user with this email!", 401, next);
-//       }
-//       updates.email = email;
-//     }
+    if (email) {
+      if (!allowedMails.includes(email)) {
+        return nextCustomError("This email is not allowed!", 401, next);
+      }
+      const existingUserWithEmail = await UserModel.findOne({
+        email,
+        _id: { $ne: id },
+      });
 
-//     if (password) {
-//       updates.password = await bcrypt.hash(password, 10);
-//     }
+      if (existingUserWithEmail) {
+        return nextCustomError(
+          "There is already a user with this email!",
+          409,
+          next
+        );
+      }
+      updates.email = email;
+    }
 
-//     if (req.file) {
-//       updates.avatar = `${BE_HOST}${req.file.path}`;
-//     }
+    // PASSWORD CHECK AND CHANGE BEGIN //
+    if (password && newPassword) {
+      const isMatch = await bcrypt.compare(password, userFromDb.password);
+      if (!isMatch) {
+        return nextCustomError("Old password is incorrect!", 401, next);
+      }
 
-//     const updatedUser = await UserModel.findByIdAndUpdate(id, updates, {
-//       new: true,
-//     });
+      if (password === newPassword) {
+        return nextCustomError(
+          "New password must be different from the old one!",
+          422,
+          next
+        );
+      }
+      updates.password = await bcrypt.hash(newPassword, 10);
+    }
+    // PASSWORD CHECK AND CHANGE END //
 
-//     if (!updatedUser) {
-//       nextCustomError("User not found!", 404, next);
-//     }
+    // AVATAR IMPLEMENT BEGIN //
+    if (req.file) {
+      if (userFromDb.avatar) {
+        const deleteResult = await deleteFileFromCloudinary(
+          userFromDb.avatar,
+          next
+        );
+      } else {
+        console.log("No old avatar found to delete.");
+      }
+      await addFile(
+        req.file,
+        UserModel,
+        userFromDb._id as Types.ObjectId,
+        "avatar",
+        next
+      );
+    }
+    // AVATAR IMPLEMENT END //
 
-//     res.status(201).json(updatedUser);
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+    const updatedUser = await UserModel.findByIdAndUpdate(id, updates, {
+      new: true,
+    }).select("-password");
+
+    if (!updatedUser) {
+      return nextCustomError("User not found!", 404, next);
+    }
+    console.log("updatedUser: ", updatedUser);
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    next(err);
+  }
+};
 
 // DELETE specific User
 // export const usersDeleteSpecific = async (
@@ -298,7 +337,7 @@ export const verifyEmail = async (
 
 // ======================================================
 
-// POST Login a User
+// POST Login a User ✅
 export const usersPostLogin = async (
   req: Request,
   res: Response,
@@ -349,7 +388,7 @@ export const usersPostLogin = async (
   }
 };
 
-// GET Check if User is already loggedin (if token is still valid)
+// GET Check if User is already loggedin (if token is still valid) ✅
 export const usersChecklogin = async (
   req: Request,
   res: Response,
@@ -375,7 +414,7 @@ export const usersChecklogin = async (
   }
 };
 
-// GET Logout a User
+// GET Logout a User ✅
 export const usersGetLogout = async (
   req: Request,
   res: Response,

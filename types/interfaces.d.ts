@@ -10,6 +10,7 @@ export interface User {
 }
 
 export interface PatchUser {
+  userName?: string;
   email?: string;
   password?: string;
 }
