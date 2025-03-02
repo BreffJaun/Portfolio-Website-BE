@@ -7,6 +7,7 @@ export interface User {
   userName: string;
   avatar: string;
   isVerified: boolean;
+  isVerifiedTCP: boolean; // TCP => To Change Password
 }
 
 export interface PatchUser {

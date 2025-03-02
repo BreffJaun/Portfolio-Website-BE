@@ -45,10 +45,10 @@ export const sendMail = async (user: typeof userFromDb, kof: KofType) => {
     await new Promise<void>((resolve, reject) => {
       transporter.sendMail(mailOptions(user, kof), function (error, info) {
         if (error) {
-          console.log(error);
+          // console.log(error);
           reject(error);
         } else {
-          console.log("Email sent: " + info.response);
+          // console.log("Email sent: " + info.response);
           resolve();
         }
       });

@@ -9,6 +9,7 @@ const userFromDb: Document<
     email: string;
     password: string;
     isVerified: boolean;
+    isVerifiedTCP: boolean;
   }
 > & {
   userName: string;
@@ -16,5 +17,6 @@ const userFromDb: Document<
   email: string;
   password: string;
   isVerified: boolean;
+  isVerifiedTCP: boolean;
   _id: Types.ObjectId;
 };

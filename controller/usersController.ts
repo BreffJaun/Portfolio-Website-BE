@@ -31,6 +31,7 @@ import {
   cookieAge,
   allowedMails,
 } from "../config/config.ts";
+import { clear } from "console";
 
 //========================
 
@@ -108,10 +109,9 @@ export const verifyEmail = async (
       decodedToken !== null &&
       "_id" in decodedToken
     ) {
-      const id = decodedToken._id;
+      const id = (decodedToken as jwt.JwtPayload)._id;
       const user = await UserModel.findByIdAndUpdate(id, { isVerified: true });
-      // res.status(200).json({ message: "E-Mail is now SUCCESSFULLY verified!" });
-      res.redirect(`${FE_HOST}/login`);
+      res.redirect(`${FE_HOST}login`);
     } else {
       nextCustomError("Invalid token format.", 400, next);
     }
@@ -122,99 +122,99 @@ export const verifyEmail = async (
   }
 };
 
-// POST Request email for forgotten password
-// export const forgotPassword = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const kof = "forgotPassword"; // kof => "kind of function"
-//     const { email } = req.body;
-//     const userFromDb = await UserModel.findOne({ email });
-//     if (!userFromDb) {
-//       return nextCustomError("There is no user with this email!", 401, next);
-//     }
+// POST Request email for forgotten password ✅
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const kof = "forgotPassword"; // kof => "kind of function"
+    const { email } = req.body;
+    const userFromDb = await UserModel.findOne({ email });
+    if (!userFromDb) {
+      return nextCustomError("There is no user with this email!", 401, next);
+    }
 
-//     // RESET EMAIL IMPLEMENT BEGIN //
-//     await sendMail(userFromDb, kof);
-//     // RESET EMAIL IMPLEMENT END //
+    // RESET EMAIL IMPLEMENT BEGIN //
+    await sendMail(userFromDb.toObject(), kof);
+    // RESET EMAIL IMPLEMENT END //
 
-//     res
-//       .status(201)
-//       .json({ message: "You got send an Email to set your new password." });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+    res.status(201).json({
+      message: "Sie erhalten eine E-Mail, um Ihr neues Passwort festzulegen.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET Verify reset token for forgotten password ✅
+export async function verifyResetToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { token } = req.params;
+    const decodedToken = jwt.verify(token, JWT_KEY);
+    const id = (decodedToken as jwt.JwtPayload)._id;
+    await UserModel.findByIdAndUpdate(
+      id,
+      { isVerifiedTCP: true },
+      { new: true }
+    );
+    res
+      .cookie("resetToken", token, {
+        maxAge: cookieAge.oneDay,
+        httpOnly: true,
+        sameSite: "none", // nur in Verbindung mit https
+        secure: true, // nur in Verbindung mit https
+      })
+      .redirect(`${FE_HOST}setnewpassword`);
+  } catch (err) {
+    next(err);
+  }
+}
 
 // POST Change (forgotten) password after email request
-// export const setNewPassword = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { token } = req.params;
-//     const { password } = req.body;
-//     let decodedToken;
-//     let user;
-//     let id;
-//     if (!password) {
-//       // After click on Email Link !
-//       decodedToken = decodeToken(token, JWT_KEY);
-//       if (
-//         typeof decodedToken === "object" &&
-//         decodedToken !== null &&
-//         "id" in decodedToken
-//       ) {
-//         id = decodedToken._id;
-//         user = await UserModel.findByIdAndUpdate(
-//           id,
-//           {
-//             isVerifiedTCP: true,
-//           },
-//           { new: true }
-//         );
-//         return res
-//           .status(201)
-//           .json({ message: "User is now verified to change password." });
-//       } else {
-//         nextCustomError("Invalid or expired token.", 400, next);
-//       }
-//     }
-//     // If you are here, you clicked on the link in the email and set isVerifiedTCP to "true"
-//     decodedToken = jwt.verify(token, JWT_KEY);
-//     if (
-//       typeof decodedToken === "object" &&
-//       decodedToken !== null &&
-//       "id" in decodedToken
-//     ) {
-//       id = decodedToken._id;
-//       user = await UserModel.findById(id);
-//       if (user && password && user.isVerifiedTCP) {
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         const updatedUser = await UserModel.findByIdAndUpdate(
-//           id,
-//           {
-//             password: hashedPassword,
-//             isVerifiedTCP: false,
-//           },
-//           { new: true }
-//         );
-//         res.status(201).json({ message: "Set new Password was SUCCESSFUL!" });
-//       } else {
-//         nextCustomError(
-//           "Password change failed. Please ensure you have verified your email.",
-//           400,
-//           next
-//         );
-//       }
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+export const setNewPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.cookies.resetToken;
+    if (!token) return nextCustomError("Token not found.", 400, next);
+    const decodedToken = jwt.verify(token, JWT_KEY);
+    const { password } = req.body;
+    const id = (decodedToken as jwt.JwtPayload)._id;
+    const user = await UserModel.findById(id);
+    if (user && password && user.isVerifiedTCP) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        id,
+        {
+          password: hashedPassword,
+          isVerifiedTCP: false,
+        },
+        { new: true }
+      );
+
+      res
+        .status(201)
+        .json({ message: "Set new Password was SUCCESSFUL!" })
+        .clearCookie("resetToken");
+    } else {
+      nextCustomError(
+        "Password change failed. Please ensure you have verified your email.",
+        400,
+        next
+      );
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
 // PATCH (Update) specific User ✅
 export const usersPatchSpecific = async (

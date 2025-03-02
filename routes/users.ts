@@ -21,8 +21,9 @@ import {
   usersGetLogout,
   usersChecklogin,
   verifyEmail,
-  // forgotPassword,
-  // setNewPassword,
+  forgotPassword,
+  verifyResetToken,
+  setNewPassword,
 } from "../controller/usersController.ts";
 
 import { auth } from "../middleware/auth.ts";
@@ -44,6 +45,9 @@ router.route("/login").post(usersPostLogin);
 router.route("/logout").get(usersGetLogout);
 router.route("/checklogin").get(usersChecklogin);
 
+// Email verification route
+router.route("/verify/:token").get(verifyEmail);
+
 // User management routes
 router.route("/").get(auth, admin, usersGetAll);
 
@@ -61,10 +65,8 @@ router
 // .delete(objectIdValidator, auth, usersDeleteSpecific);
 
 // Password management routes
-// router.route("/forgotpassword").post(forgotPassword);
-// router.route("/resetpassword/:token").post(setNewPassword);
-
-// Email verification route
-router.route("/verify/:token").get(verifyEmail);
+router.route("/forgotpassword").post(forgotPassword);
+router.route("/resetpassword/:token").get(verifyResetToken);
+router.route("/setnewpassword").post(setNewPassword);
 
 export default router;

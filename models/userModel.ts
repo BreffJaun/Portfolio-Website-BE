@@ -15,6 +15,7 @@ const userSchema = new Schema<UserDocument>(
     userName: { type: String, required: true },
     avatar: { type: String, required: false },
     isVerified: { type: Boolean, required: true },
+    isVerifiedTCP: { type: Boolean, required: true },
   },
   { strictQuery: true }
 );
