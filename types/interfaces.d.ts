@@ -27,3 +27,11 @@ export interface Post extends Document {
   articleImageSrc: string;
   articleLink?: string;
 }
+
+export interface LandingPage {
+  introduction: string;
+  name: string;
+  connectingWords: string;
+  jobTitle: string;
+  description: string;
+}

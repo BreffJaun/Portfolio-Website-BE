@@ -18,6 +18,7 @@ import errorHandler from "./middleware/errorhandler.ts";
 
 // I M P O R T:  R O U T E S
 import usersRouter from "./routes/users.ts";
+import contentRouter from "./routes/content.ts";
 // import postsRouter from "./routes/posts.ts";
 
 // ==============================================================
@@ -41,6 +42,8 @@ app.get("/favicon.ico", (req: Request, res: Response, next: NextFunction) => {
 
 // USERS
 app.use("/api/users", usersRouter);
+
+app.use("/api/content", contentRouter);
 
 // POSTS
 // app.use("/posts", postsRouter);
