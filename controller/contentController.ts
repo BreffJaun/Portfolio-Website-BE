@@ -9,8 +9,9 @@ import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
 // I M P O R T:  F U N C T I O N S
-import LandingPageModel from "../models/landingPageModel.ts";
 import UserModel from "../models/userModel.ts";
+import LandingPageModel from "../models/landingPageModel.ts";
+import MySelfModel from "../models/mySelfModel.ts";
 import type { UserDocument } from "../models/userModel.ts";
 import type { PatchUser } from "../types/interfaces";
 import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
@@ -76,6 +77,48 @@ export const patchLandingPageContent = async (
       }
     );
     res.status(200).json({ content: updatedLPContent });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET MySelfContent ✅
+export const getMySelfContent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const content = await MySelfModel.findOne();
+    if (!content) {
+      return nextCustomError("Content not found!", 404, next);
+    }
+    res.status(200).json({ content: content });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PATCH MySelfContent ✅
+export const patchMySelfContent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const newData = req.body;
+    const currentMySelfContent = await MySelfModel.findOne();
+    const id = currentMySelfContent?._id;
+
+    if (!currentMySelfContent) {
+      return nextCustomError("No content found!", 404, next);
+    }
+
+    const newMySelfContent = await MySelfModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
+
+    res.status(200).json({ content: newMySelfContent });
   } catch (err) {
     next(err);
   }

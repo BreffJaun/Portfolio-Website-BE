@@ -43,6 +43,7 @@ app.get("/favicon.ico", (req: Request, res: Response, next: NextFunction) => {
 // USERS
 app.use("/api/users", usersRouter);
 
+// CONTENT
 app.use("/api/content", contentRouter);
 
 // POSTS

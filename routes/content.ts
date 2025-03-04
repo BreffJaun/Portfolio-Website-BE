@@ -5,13 +5,16 @@ import multer from "multer";
 // I M P O R T:  F U N C T I O N S
 import { objectIdValidator } from "../middleware/objectIdValidator.ts";
 import { landingPageValidator } from "../middleware/landingPageValidator.ts";
+import { mySelfValidator } from "../middleware/mySelfValidator.ts";
 import { validateRequest } from "../middleware/validator.ts";
 
 // I M P O R T:  C O N T R O L L E R
 import {
   getLandingPageContent,
   patchLandingPageContent,
-} from "../controller/contentConroller.ts";
+  getMySelfContent,
+  patchMySelfContent,
+} from "../controller/contentController.ts";
 
 import { auth } from "../middleware/auth.ts";
 import { admin } from "../middleware/admin.ts";
@@ -30,5 +33,12 @@ router
   .route("/landingpage")
   .get(getLandingPageContent)
   .patch(landingPageValidator, validateRequest, patchLandingPageContent);
+
+router
+  .route("/myself")
+  .get(getMySelfContent)
+  .patch(mySelfValidator, validateRequest, patchMySelfContent);
+
+// "content/myself";
 
 export default router;

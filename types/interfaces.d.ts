@@ -35,3 +35,11 @@ export interface LandingPage {
   jobTitle: string;
   description: string;
 }
+
+export interface MySelf {
+  headline: string;
+  motto: string;
+  connectingWords: string;
+  jobTitle: string;
+  description: string;
+}
