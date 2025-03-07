@@ -6,6 +6,8 @@ import multer from "multer";
 import { objectIdValidator } from "../middleware/objectIdValidator.ts";
 import { landingPageValidator } from "../middleware/landingPageValidator.ts";
 import { mySelfValidator } from "../middleware/mySelfValidator.ts";
+import { stackDescriptionValidator } from "../middleware/stackDescriptionValidator.ts";
+import { stackTechnologiesValidator } from "../middleware/stackTechnologiesValidator.ts";
 import { validateRequest } from "../middleware/validator.ts";
 
 // I M P O R T:  C O N T R O L L E R
@@ -14,6 +16,11 @@ import {
   patchLandingPageContent,
   getMySelfContent,
   patchMySelfContent,
+  getStackContent,
+  patchStackDescription,
+  postStackTechnologies,
+  patchStackTechnologies,
+  deleteStackTechnologies,
 } from "../controller/contentController.ts";
 
 import { auth } from "../middleware/auth.ts";
@@ -39,6 +46,29 @@ router
   .get(getMySelfContent)
   .patch(mySelfValidator, validateRequest, patchMySelfContent);
 
-// "content/myself";
+router.route("/stack").get(getStackContent);
+
+router
+  .route("/stack/description")
+  .patch(stackDescriptionValidator, validateRequest, patchStackDescription);
+
+router
+  .route("/stack/technologies")
+  .post(
+    uploadMedia,
+    stackTechnologiesValidator,
+    validateRequest,
+    postStackTechnologies
+  );
+
+router
+  .route("/stack/technologies/:id")
+  .patch(
+    uploadMedia,
+    stackTechnologiesValidator,
+    validateRequest,
+    patchStackTechnologies
+  )
+  .delete(stackTechnologiesValidator, validateRequest, deleteStackTechnologies);
 
 export default router;

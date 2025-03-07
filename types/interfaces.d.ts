@@ -43,3 +43,14 @@ export interface MySelf {
   jobTitle: string;
   description: string;
 }
+
+export interface StackItem {
+  name: string;
+  img: string;
+}
+
+export interface StackContent {
+  headline: string;
+  description: string;
+  stack: StackItem[];
+}

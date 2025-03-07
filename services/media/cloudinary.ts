@@ -78,7 +78,7 @@ export const addFile = async (
       { new: true }
     );
   } catch (err) {
-    // console.error("Cloudinary Upload Error: ", err);
+    console.error("Cloudinary Upload Error: ", err);
     return nextCustomError("Error uploading file to Cloudinary", 500, next);
   }
 };

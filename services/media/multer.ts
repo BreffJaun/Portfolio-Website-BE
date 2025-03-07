@@ -25,8 +25,8 @@ const storage = multer.diskStorage({
 
 const createUpload = (fieldName: string) => {
   const upload = multer({ storage });
-  return upload.single(fieldName); // Hier wird das Fieldnamen dynamisch gesetzt
+  return upload.single(fieldName); // Hier wird der Fieldname dynamisch gesetzt
 };
 
-export const uploadMedia = createUpload("media");
+export const uploadMedia = createUpload("img");
 export const uploadAvatar = createUpload("avatar");
