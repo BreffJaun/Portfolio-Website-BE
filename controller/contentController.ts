@@ -16,6 +16,11 @@ import {
   StackDescriptionModel,
   StackTechnologiesModel,
 } from "../models/stackModels.ts";
+import {
+  ProjectsModel,
+  ProjectDescriptionModel,
+} from "../models/projectModels.ts";
+
 import type { UserDocument } from "../models/userModel.ts";
 import type { PatchUser } from "../types/interfaces";
 import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
@@ -38,6 +43,7 @@ import {
   allowedMails,
 } from "../config/config.ts";
 import { clear } from "console";
+import e from "express";
 
 //========================
 
@@ -280,6 +286,171 @@ export const deleteStackTechnologies = async (
     // MEDIA DELETE ONLY IF IMAGE EXISTS
     if (currentStackItem.img) {
       await deleteFileFromCloudinary(currentStackItem.img, next);
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET Projects
+export const getProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const projectsDescription = await ProjectDescriptionModel.findOne();
+    const projects = await ProjectsModel.find();
+    if (!projectsDescription || !projects) {
+      return nextCustomError("Projects not found!", 404, next);
+    }
+
+    const completeContent = {
+      headline: projectsDescription.headline,
+      description: projectsDescription.description,
+      projects: projects,
+    };
+
+    res.status(200).json({ content: completeContent });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PATCH ProjectDescription
+export const patchProjectDescription = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const newData = req.body;
+    const currentProjectDescription = await ProjectDescriptionModel.findOne();
+    const id = currentProjectDescription?._id;
+
+    if (!currentProjectDescription) {
+      return nextCustomError("No content found!", 404, next);
+    }
+
+    const updatedProjectDescription =
+      await ProjectDescriptionModel.findByIdAndUpdate(id, newData, {
+        new: true,
+      });
+    res.status(200).json({ content: updatedProjectDescription });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST Projects
+export const postProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (
+      !req.body.order ||
+      !req.file ||
+      !req.body.title ||
+      !req.body.link ||
+      !req.body.description ||
+      !req.body.tags
+    ) {
+      return res.status(400).json({ message: "Data not complete" });
+    }
+    console.log("req.body: ", req.body);
+    const newProject = {
+      order: parseInt(req.body.order),
+      img: req.file.path,
+      title: req.body.title,
+      link: req.body.link,
+      description: req.body.description,
+      tags: req.body.tags.split(", "),
+    };
+    const createdProject = await ProjectsModel.create(newProject);
+    const id = createdProject._id;
+
+    // MEDIA UPLOAD BEGIN //
+    if (req.file) {
+      await addFile(req.file, ProjectsModel, id as Types.ObjectId, "img", next);
+    }
+    // MEDIA UPLOAD END //
+
+    res.status(201).json({ content: createdProject });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PATCH Projects
+export const patchProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const newData = req.body;
+    const currentProject = await ProjectsModel.findById(id);
+    // console.log("newData: ", newData);
+
+    // CHECK IF ITEM EXISTS
+    if (!currentProject) {
+      return nextCustomError("No Project found!", 404, next);
+    }
+
+    // TAGS STRING TO ARRAY
+    if (newData.tags && typeof newData.tags === "string") {
+      newData.tags = newData.tags.split(", ").map((tag: string) => tag.trim());
+    }
+
+    let updatedProject = await ProjectsModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
+
+    // MEDIA UPLOAD BEGIN //
+    if (req.file) {
+      // console.log("req.file: ", req.file);
+      if (currentProject.img) {
+        await deleteFileFromCloudinary(currentProject.img, next);
+      }
+      await addFile(
+        req.file,
+        ProjectsModel,
+        currentProject._id as Types.ObjectId,
+        "img",
+        next
+      );
+    }
+    // MEDIA UPLOAD END //
+
+    updatedProject = await ProjectsModel.findById(id);
+    // console.log("updatedProject: ", updatedProject);
+    res.status(201).json({ content: updatedProject });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE Projects
+export const deleteProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const currentProject = await ProjectsModel.findByIdAndDelete(id);
+    if (!currentProject) {
+      return nextCustomError("No Project found!", 404, next);
+    }
+
+    // MEDIA DELETE ONLY IF IMAGE EXISTS
+    if (currentProject.img) {
+      await deleteFileFromCloudinary(currentProject.img, next);
     }
 
     res.status(204).end();

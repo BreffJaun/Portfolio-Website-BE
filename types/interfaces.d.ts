@@ -54,3 +54,18 @@ export interface StackContent {
   description: string;
   stack: StackItem[];
 }
+
+export interface ProjectItem {
+  order: number;
+  img: string;
+  title: string;
+  link: string;
+  description: string;
+  tags: string[];
+}
+
+export interface ProjectContent {
+  headline: string;
+  description: string;
+  stack: ProjectItem[];
+}
