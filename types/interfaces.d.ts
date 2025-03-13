@@ -16,15 +16,28 @@ export interface PatchUser {
   password?: string;
 }
 
+export interface FeedDescription extends Document {
+  _id: Types.ObjectId;
+  feed_title_img?: string;
+  feed_profile_img?: string;
+  ghLink: string;
+  fullName: string;
+  statement: string;
+  jobTitle: string;
+  about: string;
+}
+
 export interface Post extends Document {
   _id: Types.ObjectId;
-  avatar: string;
-  authorAction: string;
-  date: string;
-  mood: string;
-  articleTitle: string;
+  authorId?: string;
+  authorName?: string;
+  authorAvatar?: string;
+  authorAction?: string;
+  // date: string;
+  vibe: string;
+  articleTitle?: string;
   articleContent: string;
-  articleImageSrc: string;
+  articleImageSrc?: string;
   articleLink?: string;
 }
 

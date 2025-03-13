@@ -3,84 +3,61 @@ import { body } from "express-validator";
 
 // C R E A T E   V A L I D A T O R
 export const postValidator = [
-  body("authorAction")
-    .withMessage("Just an Emoji which describes your action!")
-    .trim()
-    .escape(),
-  body("date").notEmpty().withMessage("Current date has to be set!").trim(),
-  body("mood")
+  body("authordId").trim().escape(),
+  body("authorName").trim().escape(),
+  body("authorAvatar").trim().escape(),
+  body("authorAction").trim().escape(),
+  body("vibe")
     .notEmpty()
-    .withMessage("Mood has to be set! A short text with an Emoji")
+    .withMessage("Vibe has to be set! A short text with an Emoji")
     .trim()
     .escape(),
-  body("articleTitle")
-    .withMessage("Title ist not required, but recommended!")
-    .trim()
-    .escape(),
+  body("articleTitle").optional().trim().escape(),
   body("articleContent")
     .notEmpty()
     .withMessage("Article content has to be set!")
     .trim()
     .escape(),
   body("articleImageSrc")
-    .notEmpty()
-    .withMessage("Article image URL is not required, but recommended!")
-    .isURL()
-    .withMessage("Article image must be a valid URL!")
+    .optional()
+    // .isURL()
+    // .withMessage("Article image must be a valid URL!")
     .trim(),
   body("articleLink")
     .optional()
     .isURL()
-    .withMessage(
-      "Article link is not required, but recommended. Must be a valid URL!"
-    )
-    .trim(),
+    .withMessage("Article link must be a valid URL!"),
 ];
 
 // Validator für Updates
 export const postUpdateValidator = [
-  body("authorAction")
-    .optional()
-    .withMessage("Just an Emoji which describes your action!")
-    .trim()
-    .escape(),
-  body("mood")
-    .optional()
+  body("authordId").trim().escape(),
+  body("authorName").trim().escape(),
+  body("avatar").trim().escape(),
+  body("authorAction").trim().escape(),
+  // body("date")
+  //   .notEmpty()
+  //   .withMessage("Current date is set automatically!")
+  //   .trim(),
+  body("vibe")
     .notEmpty()
-    .withMessage("Mood has to be set! A short text with an Emoji")
+    .withMessage("Vibe has to be set! A short text with an Emoji")
     .trim()
     .escape(),
-  body("articleTitle")
-    .optional()
-    .withMessage("Title is not required, but recommended!")
-    .trim()
-    .escape(),
+  body("articleTitle").optional().trim().escape(),
   body("articleContent")
-    .optional()
     .notEmpty()
     .withMessage("Article content has to be set!")
     .trim()
     .escape(),
   body("articleImageSrc")
     .optional()
-    .notEmpty()
-    .withMessage("Article image URL is not required, but recommended!")
     .isURL()
     .withMessage("Article image must be a valid URL!")
     .trim(),
   body("articleLink")
     .optional()
     .isURL()
-    .withMessage(
-      "Article link is not required, but recommended. Must be a valid URL!"
-    )
+    .withMessage("Article link must be a valid URL!")
     .trim(),
-  body("date").custom((value: any, { req }: { req: any }) => {
-    if (value !== undefined) {
-      throw new Error("Date cannot be modified after it is set.");
-    }
-    return true;
-  }),
 ];
-
-// normalize() => changes all chars to lowerCase

@@ -28,5 +28,13 @@ const createUpload = (fieldName: string) => {
   return upload.single(fieldName); // Hier wird der Fieldname dynamisch gesetzt
 };
 
+export const uploadFeedImages = multer({ storage }).fields([
+  { name: "feed_title_img", maxCount: 1 },
+  { name: "feed_profile_img", maxCount: 1 },
+]);
+
 export const uploadMedia = createUpload("img");
 export const uploadAvatar = createUpload("avatar");
+export const uploadFeedTitleImg = createUpload("feed_title_img");
+export const uploadFeedProfileImg = createUpload("feed_Profile_img");
+export const uploadPostMedia = createUpload("articleImageSrc");

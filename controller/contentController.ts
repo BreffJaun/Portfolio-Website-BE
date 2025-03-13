@@ -294,7 +294,7 @@ export const deleteStackTechnologies = async (
   }
 };
 
-// GET Projects
+// GET Projects ✅
 export const getProjects = async (
   req: Request,
   res: Response,
@@ -319,7 +319,7 @@ export const getProjects = async (
   }
 };
 
-// PATCH ProjectDescription
+// PATCH ProjectDescription ✅
 export const patchProjectDescription = async (
   req: Request,
   res: Response,
@@ -344,7 +344,7 @@ export const patchProjectDescription = async (
   }
 };
 
-// POST Projects
+// POST Projects ✅
 export const postProjects = async (
   req: Request,
   res: Response,
@@ -385,7 +385,7 @@ export const postProjects = async (
   }
 };
 
-// PATCH Projects
+// PATCH Projects ✅
 export const patchProjects = async (
   req: Request,
   res: Response,
@@ -435,7 +435,7 @@ export const patchProjects = async (
   }
 };
 
-// DELETE Projects
+// DELETE Projects ✅
 export const deleteProjects = async (
   req: Request,
   res: Response,

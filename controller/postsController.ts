@@ -8,7 +8,7 @@ import { Model, Types } from "mongoose";
 import type { PatchUser } from "../types/interfaces";
 
 // I M P O R T:  F U N C T I O N S
-import PostModel from "../models/postModel.ts";
+import PostModel from "../models/feedModels.ts";
 import type { Post } from "../types/interfaces";
 // import UserModel from "../models/userModel.ts";
 import { decodeToken } from "../middleware/auth.ts";
