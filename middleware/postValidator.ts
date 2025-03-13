@@ -3,13 +3,17 @@ import { body } from "express-validator";
 
 // C R E A T E   V A L I D A T O R
 export const postValidator = [
-  body("authordId").trim().escape(),
+  body("authorId")
+    .notEmpty()
+    .withMessage("Author ID is required!")
+    .trim()
+    .escape(),
   body("authorName").trim().escape(),
   body("authorAvatar").trim().escape(),
   body("authorAction").trim().escape(),
   body("vibe")
-    .notEmpty()
-    .withMessage("Vibe has to be set! A short text with an Emoji")
+    .optional()
+    // .withMessage("Vibe is optional! A short text with an Emoji")
     .trim()
     .escape(),
   body("articleTitle").optional().trim().escape(),
@@ -24,14 +28,22 @@ export const postValidator = [
     // .withMessage("Article image must be a valid URL!")
     .trim(),
   body("articleLink")
-    .optional()
-    .isURL()
-    .withMessage("Article link must be a valid URL!"),
+    .optional() // Feld ist optional
+    .custom((value) => {
+      if (value === "") return true;
+      return /^https?:\/\/[^\s]+$/.test(value);
+    })
+    .withMessage("Article link must be a valid URL or empty!")
+    .trim(),
 ];
 
 // Validator für Updates
 export const postUpdateValidator = [
-  body("authordId").trim().escape(),
+  body("authorId")
+    .notEmpty()
+    .withMessage("Author ID is required!")
+    .trim()
+    .escape(),
   body("authorName").trim().escape(),
   body("avatar").trim().escape(),
   body("authorAction").trim().escape(),
@@ -40,8 +52,8 @@ export const postUpdateValidator = [
   //   .withMessage("Current date is set automatically!")
   //   .trim(),
   body("vibe")
-    .notEmpty()
-    .withMessage("Vibe has to be set! A short text with an Emoji")
+    .optional()
+    // .withMessage("Vibe is optional! A short text with an Emoji")
     .trim()
     .escape(),
   body("articleTitle").optional().trim().escape(),
@@ -55,8 +67,13 @@ export const postUpdateValidator = [
     .isURL()
     .withMessage("Article image must be a valid URL!")
     .trim(),
+  // body("articleLink")
+  //   .optional()
+  //   .isURL()
+  //   .withMessage("Article link must be a valid URL!")
+  //   .trim(),
   body("articleLink")
-    .optional()
+    .optional() // Feld ist optional
     .isURL()
     .withMessage("Article link must be a valid URL!")
     .trim(),

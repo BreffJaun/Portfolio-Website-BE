@@ -43,16 +43,27 @@ const router = express.Router();
 router
   .route("/")
   .get(getFeedDescription)
-  .patch(uploadFeedImages, feedDescriptionValidator, patchFeedDescription);
+  .patch(
+    uploadFeedImages,
+    feedDescriptionValidator,
+    validateRequest,
+    patchFeedDescription
+  );
 
 router
   .route("/post")
   .get(getPosts)
-  .post(uploadPostMedia, postValidator, createPost);
+  .post(uploadPostMedia, postValidator, validateRequest, createPost);
 
 router
   .route("/post/:id")
   .delete(objectIdValidator, deletePost)
-  .patch(objectIdValidator, uploadPostMedia, postValidator, editPost);
+  .patch(
+    objectIdValidator,
+    uploadPostMedia,
+    postValidator,
+    validateRequest,
+    editPost
+  );
 
 export default router;

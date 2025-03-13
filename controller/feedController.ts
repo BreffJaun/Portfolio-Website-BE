@@ -166,7 +166,6 @@ export const createPost = async (
     // console.log("req.body: ", req.body);
 
     if (
-      !vibe ||
       !articleContent ||
       !authorAvatar ||
       !authorAction ||
@@ -186,7 +185,7 @@ export const createPost = async (
       vibe,
       articleTitle,
       articleContent,
-      articleLink,
+      articleLink: articleLink || undefined,
     };
     const createdPost = await PostModel.create(newPost);
     const id = createdPost._id;
@@ -203,6 +202,7 @@ export const createPost = async (
     }
     // MEDIA UPLOAD END //
 
+    // console.log("createdPost: ", createdPost);
     res.status(201).json({ content: createdPost });
   } catch (err) {
     next(err);
@@ -253,8 +253,8 @@ export const editPost = async (
       articleLink,
     } = req.body;
     // console.log("req.body: ", req.body);
-    console.log("req.file: ", req.file);
-    console.log("articleImageSrc: ", articleImageSrc);
+    // console.log("req.file: ", req.file);
+    // console.log("articleImageSrc: ", articleImageSrc);
     const currentPost = await PostModel.findById(id);
     if (!currentPost) {
       return nextCustomError("No post found!", 404, next);
@@ -298,7 +298,7 @@ export const editPost = async (
     }
     // MEDIA UPLOAD / HANDLING END //
 
-    console.log("updatedPost: ", updatedPost);
+    // console.log("updatedPost: ", updatedPost);
     res.status(200).json({ content: updatedPost });
   } catch (err) {
     next(err);

@@ -30,7 +30,7 @@ const postSchema = new Schema<Post>(
     authorAvatar: { type: String, required: false },
     authorAction: { type: String, required: false },
     // date: { type: String, required: true },
-    vibe: { type: String, required: true },
+    vibe: { type: String, required: false, default: "" },
     articleTitle: { type: String, required: false },
     articleContent: { type: String, required: true },
     articleImageSrc: {
@@ -41,6 +41,7 @@ const postSchema = new Schema<Post>(
     articleLink: {
       type: String,
       required: false,
+      default: "",
       match: [/^https?:\/\/[^\s]+$/, "Invalid URL format"],
     },
   },
