@@ -136,11 +136,29 @@ export const getPosts = async (
   next: NextFunction
 ) => {
   try {
-    const posts = await PostModel.find();
-    if (!posts) {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const totalPosts = await PostModel.countDocuments();
+
+    const skip = (page - 1) * limit;
+    const posts = await PostModel.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    if (!posts.length && page > 1) {
+      return res.status(200).json({
+        content: [],
+        totalPages: Math.ceil(totalPosts / limit),
+      });
+    }
+    if (!posts.length) {
       return nextCustomError("No posts found!", 404, next);
     }
-    res.status(200).json({ content: posts });
+
+    res.status(200).json({
+      content: posts,
+      totalPages: Math.ceil(totalPosts / limit),
+    });
   } catch (err) {
     next(err);
   }
@@ -161,6 +179,7 @@ export const createPost = async (
       vibe,
       articleTitle,
       articleContent,
+      articleImageSrc,
       articleLink,
     } = req.body;
     // console.log("req.body: ", req.body);
@@ -186,6 +205,7 @@ export const createPost = async (
       articleTitle,
       articleContent,
       articleLink: articleLink || undefined,
+      articleImageSrc: articleImageSrc || "",
     };
     const createdPost = await PostModel.create(newPost);
     const id = createdPost._id;
