@@ -40,6 +40,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "bun --watch ./index.ts"
+    "start": "bun --watch ./dist/index.js"
   }
 }

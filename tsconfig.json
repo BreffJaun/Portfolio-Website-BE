@@ -1,29 +1,52 @@
+// {
+//   "compilerOptions": {
+//     // Enable latest features
+//     "lib": ["ESNext"],
+//     "target": "ESNext",
+//     "module": "ESNext",
+//     "moduleDetection": "force",
+//     "jsx": "react-jsx",
+//     "allowJs": true,
+
+//     // Bundler mode
+//     "moduleResolution": "bundler",
+//     "emitDeclarationOnly": true,
+//     "allowImportingTsExtensions": true,
+//     "verbatimModuleSyntax": true,
+//     "noEmit": false,
+//     "outDir": "./dist",
+
+
+//     // Best practices
+//     "strict": true,
+//     "skipLibCheck": true,
+//     "noFallthroughCasesInSwitch": true,
+
+//     // Some stricter flags (disabled by default)
+//     "noUnusedLocals": false,
+//     "noUnusedParameters": false,
+//     "noPropertyAccessFromIndexSignature": false
+//   }
+// }
+
 {
   "compilerOptions": {
-    // Enable latest features
+    "outDir": "./dist",
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
-
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "noEmit": false,
-    "outDir": "./dist",
-
-
-    // Best practices
     "strict": true,
     "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noFallthroughCasesInSwitch": true
   }
 }
+
