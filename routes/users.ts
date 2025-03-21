@@ -27,7 +27,6 @@ import {
 } from "../controller/usersController.ts";
 
 import { auth } from "../middleware/auth.ts";
-import { admin } from "../middleware/admin.ts";
 
 // ========================
 
@@ -49,7 +48,7 @@ router.route("/checklogin").get(usersChecklogin);
 router.route("/verify/:token").get(verifyEmail);
 
 // User management routes
-router.route("/").get(auth, admin, usersGetAll);
+router.route("/").get(auth, usersGetAll);
 
 router
   .route("/:id")

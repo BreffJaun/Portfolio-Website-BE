@@ -31,7 +31,6 @@ import {
 } from "../controller/contentController.ts";
 
 import { auth } from "../middleware/auth.ts";
-import { admin } from "../middleware/admin.ts";
 
 // ========================
 

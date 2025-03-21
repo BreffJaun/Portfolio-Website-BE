@@ -22,7 +22,6 @@ import {
 } from "../controller/feedController.ts";
 
 import { auth } from "../middleware/auth.ts";
-import { admin } from "../middleware/admin.ts";
 
 // ========================
 
