@@ -39,7 +39,7 @@
     "url-encode-decode": "^1.0.0"
   },
   "scripts": {
-    "build": "tsc --watch",
-    "start": "bun --watch ./index.ts"
+    "build": "tsc",
+    "start": "bun --watch ./dist/index.js"
   }
 }
