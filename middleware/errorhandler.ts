@@ -3,10 +3,10 @@ import type { ErrorRequestHandler } from "express";
 import type { NextFunction } from "express";
 
 // I M P O R T:  T Y P E S
-import { CustomError } from "../types/classes.ts";
+import { CustomError } from "../types/classes";
 
 // I M P O R T:  E R R O R  H A N D L I N G  O P T I O N S
-import { ERROR_HANDLING_OPTIONS } from "../config/config.ts";
+import { ERROR_HANDLING_OPTIONS } from "../config/config";
 
 // E R R O R   H A N D L E R
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {

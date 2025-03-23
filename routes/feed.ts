@@ -3,13 +3,13 @@ import express from "express";
 import multer from "multer";
 
 // I M P O R T:  F U N C T I O N S
-import { objectIdValidator } from "../middleware/objectIdValidator.ts";
-import { feedDescriptionValidator } from "../middleware/feedDescriptionValidator.ts";
+import { objectIdValidator } from "../middleware/objectIdValidator";
+import { feedDescriptionValidator } from "../middleware/feedDescriptionValidator";
 import {
   postValidator,
   postUpdateValidator,
-} from "../middleware/postValidator.ts";
-import { validateRequest } from "../middleware/validator.ts";
+} from "../middleware/postValidator";
+import { validateRequest } from "../middleware/validator";
 
 // I M P O R T:  C O N T R O L L E R
 import {
@@ -19,9 +19,9 @@ import {
   createPost,
   deletePost,
   editPost,
-} from "../controller/feedController.ts";
+} from "../controller/feedController";
 
-import { auth } from "../middleware/auth.ts";
+import { auth } from "../middleware/auth";
 
 // ========================
 
@@ -33,7 +33,7 @@ import {
   uploadFeedTitleImg,
   uploadPostMedia,
   uploadFeedImages,
-} from "../services/media/multer.ts";
+} from "../services/media/multer";
 
 // C R E A T E   R O U T E S
 const router = express.Router();

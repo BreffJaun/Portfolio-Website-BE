@@ -3,11 +3,11 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 
 // I M P O R T:  T Y P E S
-import { CustomError } from "../../types/classes.ts";
-import type { UserDocument } from "../../models/userModel.ts";
+import { CustomError } from "../../types/classes";
+import type { UserDocument } from "../../models/userModel";
 
 // I M P O R T:  E N V  O P T I O N S
-import { JWT_KEY, JWT_EXPIRATION } from "../../config/config.ts";
+import { JWT_KEY, JWT_EXPIRATION } from "../../config/config";
 
 // ======================================================
 

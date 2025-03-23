@@ -4,10 +4,10 @@ import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
 
 // I M P O R T:  T Y P E S
-import { CustomError } from "../types/classes.ts";
+import { CustomError } from "../types/classes";
 
 // I M P O R T  &  D E C L A R E   B C R Y P T   K E Y
-import { JWT_KEY } from "../config/config.ts";
+import { JWT_KEY } from "../config/config";
 
 //========================
 

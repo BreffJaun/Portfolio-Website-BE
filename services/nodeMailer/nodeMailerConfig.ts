@@ -3,15 +3,15 @@ import "dotenv/config";
 import nodemailer from "nodemailer";
 
 // I M P O R T:  T Y P E S
-import type { userFromDb } from "../../types/hybrids.d.ts";
-import type { KofType } from "../../types/types.ts";
+import type { userFromDb } from "../../types/hybrids.d";
+import type { KofType } from "../../types/types";
 
 // I M P O R T:  E N V  O P T I O N S
 import { SENDER_MAIL, SENDER_PASS } from "../../config/config.js";
-import { MAIL_SUBJECT, generateMailHtml } from "./nodeMailerContent.ts";
+import { MAIL_SUBJECT, generateMailHtml } from "./nodeMailerContent";
 
 // I M P O R T:   S E R V I C E S
-import { createVerifyToken } from "../jwt/jwt.ts";
+import { createVerifyToken } from "../jwt/jwt";
 
 //========================
 

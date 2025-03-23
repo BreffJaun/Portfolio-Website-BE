@@ -2,7 +2,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 // I M P O R T:  T Y P E S
-import { CustomError } from "../types/classes.ts";
+import { CustomError } from "../types/classes";
 
 // C R E A T E  R O U T E S
 

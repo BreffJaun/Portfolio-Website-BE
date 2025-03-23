@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 
 // I M P O R T:  E N V
-import { MONGO_DB_CONNECTION_STRING } from "./config.ts";
+import { MONGO_DB_CONNECTION_STRING } from "./config";
 
 // ==============================================================
 

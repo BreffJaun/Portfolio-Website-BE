@@ -3,12 +3,12 @@ import express from "express";
 import multer from "multer";
 
 // I M P O R T:  F U N C T I O N S
-import { objectIdValidator } from "../middleware/objectIdValidator.ts";
+import { objectIdValidator } from "../middleware/objectIdValidator";
 import {
   userValidator,
   userUpdateValidator,
-} from "../middleware/userValidator.ts";
-import { validateRequest } from "../middleware/validator.ts";
+} from "../middleware/userValidator";
+import { validateRequest } from "../middleware/validator";
 
 // I M P O R T:  C O N T R O L L E R
 import {
@@ -24,14 +24,14 @@ import {
   forgotPassword,
   verifyResetToken,
   setNewPassword,
-} from "../controller/usersController.ts";
+} from "../controller/usersController";
 
-import { auth } from "../middleware/auth.ts";
+import { auth } from "../middleware/auth";
 
 // ========================
 
 // D E F I N E   M U L T E R   I N S T A N C E
-import { uploadMedia, uploadAvatar } from "../services/media/multer.ts";
+import { uploadMedia, uploadAvatar } from "../services/media/multer";
 
 // C R E A T E   R O U T E S
 const router = express.Router();

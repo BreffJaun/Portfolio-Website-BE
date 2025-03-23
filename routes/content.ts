@@ -3,14 +3,14 @@ import express from "express";
 import multer from "multer";
 
 // I M P O R T:  F U N C T I O N S
-import { objectIdValidator } from "../middleware/objectIdValidator.ts";
-import { landingPageValidator } from "../middleware/landingPageValidator.ts";
-import { mySelfValidator } from "../middleware/mySelfValidator.ts";
-import { stackDescriptionValidator } from "../middleware/stackDescriptionValidator.ts";
-import { stackTechnologiesValidator } from "../middleware/stackTechnologiesValidator.ts";
-import { projectsValidator } from "../middleware/projectsValidator.ts";
-import { projectsDescriptionValidator } from "../middleware/projectsDescriptionValidator.ts";
-import { validateRequest } from "../middleware/validator.ts";
+import { objectIdValidator } from "../middleware/objectIdValidator";
+import { landingPageValidator } from "../middleware/landingPageValidator";
+import { mySelfValidator } from "../middleware/mySelfValidator";
+import { stackDescriptionValidator } from "../middleware/stackDescriptionValidator";
+import { stackTechnologiesValidator } from "../middleware/stackTechnologiesValidator";
+import { projectsValidator } from "../middleware/projectsValidator";
+import { projectsDescriptionValidator } from "../middleware/projectsDescriptionValidator";
+import { validateRequest } from "../middleware/validator";
 
 // I M P O R T:  C O N T R O L L E R
 import {
@@ -28,14 +28,14 @@ import {
   postProjects,
   patchProjects,
   deleteProjects,
-} from "../controller/contentController.ts";
+} from "../controller/contentController";
 
-import { auth } from "../middleware/auth.ts";
+import { auth } from "../middleware/auth";
 
 // ========================
 
 // D E F I N E   M U L T E R   I N S T A N C E
-import { uploadMedia, uploadAvatar } from "../services/media/multer.ts";
+import { uploadMedia, uploadAvatar } from "../services/media/multer";
 import { get } from "http";
 
 // C R E A T E   R O U T E S

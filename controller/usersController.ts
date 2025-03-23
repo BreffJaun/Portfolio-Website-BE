@@ -9,19 +9,19 @@ import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
 // I M P O R T:  F U N C T I O N S
-import UserModel from "../models/userModel.ts";
-import type { UserDocument } from "../models/userModel.ts";
-import type { PatchUser } from "../types/interfaces.ts";
-import { sendMail } from "../services/nodeMailer/nodeMailerConfig.ts";
-// import { decodeToken } from "../middleware/auth.ts";
-import { nextCustomError } from "../middleware/errorhandler.ts";
+import UserModel from "../models/userModel";
+import type { UserDocument } from "../models/userModel";
+import type { PatchUser } from "../types/interfaces";
+import { sendMail } from "../services/nodeMailer/nodeMailerConfig";
+// import { decodeToken } from "../middleware/auth";
+import { nextCustomError } from "../middleware/errorhandler";
 import {
   addFile,
   extractPublicIdFromUrl,
   deleteFileFromCloudinary,
-} from "../services/media/cloudinary.ts";
-import { createVerifyToken } from "../services/jwt/jwt.ts";
-import { decodeToken } from "../middleware/auth.ts";
+} from "../services/media/cloudinary";
+import { createVerifyToken } from "../services/jwt/jwt";
+import { decodeToken } from "../middleware/auth";
 
 // I M P O R T:  E N V  O P T I O N S
 import {
@@ -30,7 +30,7 @@ import {
   FE_HOST,
   cookieAge,
   allowedMails,
-} from "../config/config.ts";
+} from "../config/config";
 import { clear } from "console";
 
 //========================

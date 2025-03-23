@@ -6,20 +6,20 @@ import cookieParser from "cookie-parser";
 import type { Request, Response, NextFunction } from "express";
 
 // I M P O R T:  E N V  O P T I O N S
-import { PORT, corsOptions } from "./config/config.ts";
+import { PORT, corsOptions } from "./config/config";
 
 // I M P O R T:  C O M P O N E N T S
-import { app, serverStart } from "./config/server.ts";
-import { connectToDatabase } from "./config/database.ts";
+import { app, serverStart } from "./config/server";
+import { connectToDatabase } from "./config/database";
 
 // I M P O R T:  M I D D L E W A R E  H A N D L E R
-import invalidRoute from "./routes/invalidRoute.ts";
-import errorHandler from "./middleware/errorhandler.ts";
+import invalidRoute from "./routes/invalidRoute";
+import errorHandler from "./middleware/errorhandler";
 
 // I M P O R T:  R O U T E S
-import usersRouter from "./routes/users.ts";
-import contentRouter from "./routes/content.ts";
-import feedRouter from "./routes/feed.ts";
+import usersRouter from "./routes/users";
+import contentRouter from "./routes/content";
+import feedRouter from "./routes/feed";
 
 // ==============================================================
 

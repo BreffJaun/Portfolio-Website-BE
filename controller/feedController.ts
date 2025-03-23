@@ -9,25 +9,25 @@ import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
 // I M P O R T:  F U N C T I O N S
-import UserModel from "../models/userModel.ts";
-import LandingPageModel from "../models/landingPageModel.ts";
-import MySelfModel from "../models/mySelfModel.ts";
+import UserModel from "../models/userModel";
+import LandingPageModel from "../models/landingPageModel";
+import MySelfModel from "../models/mySelfModel";
 import {
   StackDescriptionModel,
   StackTechnologiesModel,
-} from "../models/stackModels.ts";
+} from "../models/stackModels";
 import {
   ProjectsModel,
   ProjectDescriptionModel,
-} from "../models/projectModels.ts";
-import { FeedModel, PostModel } from "../models/feedModels.ts";
+} from "../models/projectModels";
+import { FeedModel, PostModel } from "../models/feedModels";
 
-import { nextCustomError } from "../middleware/errorhandler.ts";
+import { nextCustomError } from "../middleware/errorhandler";
 import {
   addFile,
   deleteFileFromCloudinary,
-} from "../services/media/cloudinary.ts";
-import { decodeHtmlEntities } from "../services/utils/utils.ts";
+} from "../services/media/cloudinary";
+import { decodeHtmlEntities } from "../services/utils/utils";
 
 // I M P O R T:  E N V  O P T I O N S
 import {
@@ -36,7 +36,7 @@ import {
   FE_HOST,
   cookieAge,
   allowedMails,
-} from "../config/config.ts";
+} from "../config/config";
 import { clear } from "console";
 import e from "express";
 
