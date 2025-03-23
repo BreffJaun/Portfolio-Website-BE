@@ -58,7 +58,11 @@ export const addFile = async (
   }
 
   try {
-    const absFilePath = `${__dirname}/../../${file.path}`;
+    // VERSION FOR LOCAL DEVELOPMENT
+    // const absFilePath = `${__dirname}/../../${file.path}`;
+    // VERSION FOR PRODUCTION
+    const absFilePath = file.path;
+
     // console.log("__dirname: ", __dirname);
     // console.log("file.path: ", file.path);
     // console.log("absFilePath: ", absFilePath);
