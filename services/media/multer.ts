@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
       // VERSION FOR LOCAL DEVELOPMENT
       // const uploadPath = path.normalize("uploads/");
       // VERSION FOR PRODUCTION
-      const uploadPath = path.join(__dirname, "dist", "uploads");
+      const uploadPath = path.join(__dirname, "../../uploads");
       console.log("Trying to create directory:", uploadPath);
       console.log("__dirname:", __dirname);
       // Erstelle Ordner rekursiv falls nicht vorhanden
