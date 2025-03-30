@@ -1,25 +1,6 @@
-# **Backend-Template with ExpressJS, MongoDB, TS & bun**
+# Backend Repository for My Portfolio Website
 
-This is a simple template for a backend with express.js and connection to mongoDB. Furthermore is this template initialized with **bun** for better perfomance and it is completely written in **TypeScript** to make it more secure.
-
-# Folder structure:
-- config
-- controller
-- middleware
-- models
-- routes
-- seeding
-- services
-- types
-
-The folders are prefilled with default files. The default files includes routes for handling several user endpints like create a user and get user information.
-
-# How to use it
-Create .env file. The template also includes an template for an .env file with the preseted and used environment variables in this template.
-
-Type in terminal
-1.  npm i 
-2.  npm start
+This backend repository is based on the [Backend Template with ExpressJS, MongoDB, TS & bun](https://github.com/BreffJaun/backend-template-bun-ts-expressJS-mongoDB). It powers the backend of my [portfolio website frontend](https://github.com/BreffJaun/Portfolio-Website).
 
 # Used Dependencies in this template
 <table>
