@@ -4,11 +4,11 @@ import { body } from "express-validator";
 // C R E A T E   V A L I D A T O R
 export const postValidator = [
   body("authorId").notEmpty().withMessage("Author ID is required!").trim(),
-  body("authorName").trim().escape(),
-  body("authorAvatar").trim().escape(),
-  body("authorAction").trim().escape(),
+  body("authorName").trim(),
+  body("authorAvatar").trim(),
+  body("authorAction").trim(),
   body("vibe").optional().trim(),
-  body("articleTitle").optional().trim().escape(),
+  body("articleTitle").optional().trim(),
   body("articleContent")
     .notEmpty()
     .withMessage("Article content has to be set!")
@@ -27,11 +27,11 @@ export const postValidator = [
 // Validator für Updates
 export const postUpdateValidator = [
   body("authorId").notEmpty().withMessage("Author ID is required!").trim(),
-  body("authorName").trim().escape(),
-  body("avatar").trim().escape(),
-  body("authorAction").trim().escape(),
+  body("authorName").trim(),
+  body("avatar").trim(),
+  body("authorAction").trim(),
   body("vibe").optional().trim(),
-  body("articleTitle").optional().trim().escape(),
+  body("articleTitle").optional().trim(),
   body("articleContent")
     .notEmpty()
     .withMessage("Article content has to be set!")
