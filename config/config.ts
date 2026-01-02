@@ -21,7 +21,12 @@ export const MONGO_DB_CONNECTION_STRING =
 export const PORT = process.env.PORT || 4000;
 
 // B C R Y P T   K E Y
-export const JWT_KEY = process.env.SECRET_JWT_KEY || "DefaultValue";
+// export const JWT_KEY = process.env.SECRET_JWT_KEY || "DefaultValue";
+const jwtKey = process.env.SECRET_JWT_KEY;
+if (!jwtKey) {
+  throw new Error("SECRET_JWT_KEY is missing");
+}
+export const JWT_KEY: string = jwtKey;
 export const JWT_EXPIRATION = process.env.SECRET_JWT_EXPIRATION || "1h";
 
 // C L O U D I N A R Y   K E Y S

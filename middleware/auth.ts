@@ -17,14 +17,23 @@ export function auth(req: Request, res: Response, next: NextFunction) {
     // If the token is not verified successfully, an error is thrown IMMEDIATELY and it goes into Catch!
 
     // BEGIN COOKIE CODE //
-    const token = req.cookies.loginCookie;
+    const token = req.cookies?.loginCookie;
+    if (!token) {
+      return next(new CustomError("Not authenticated", 401));
+    }
     const decodedToken = jwt.verify(token, JWT_KEY);
     // END COOKIE CODE //
 
     req.token = decodedToken;
     next();
   } catch (err) {
-    next(new CustomError(`Not authorized! AUTH`, 401, err));
+    if (err instanceof jwt.TokenExpiredError) {
+      return next(new CustomError("Token expired", 401));
+    }
+    if (err instanceof jwt.JsonWebTokenError) {
+      return next(new CustomError("Invalid token", 401));
+    }
+    next(err);
   }
 }
 
