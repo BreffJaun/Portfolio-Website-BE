@@ -1,5 +1,6 @@
 // I M P O R T   D E P E N D E N C I E S
 import { Document, Types } from "mongoose";
+import { StackCategory } from "./types";
 
 export interface User {
   email: string;
@@ -60,6 +61,9 @@ export interface MySelf {
 export interface StackItem {
   name: string;
   img: string;
+  category: StackCategory;
+  scaledWidth?: number;
+  scaledHeight?: number;
 }
 
 export interface StackContent {

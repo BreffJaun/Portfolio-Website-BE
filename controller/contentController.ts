@@ -196,9 +196,15 @@ export const postStackTechnologies = async (
     if (!req.body.name || !req.file) {
       return res.status(400).json({ message: "Name or image file is missing" });
     }
+
+    if (!req.body.category) {
+      return res.status(400).json({ message: "Category is missing" });
+    }
+
     const newStackItem = {
       name: req.body.name,
       img: req.file.path,
+      category: req.body.category,
     };
     const createdStackItem = await StackTechnologiesModel.create(newStackItem);
     const id = createdStackItem._id;
@@ -229,22 +235,25 @@ export const patchStackTechnologies = async (
 ) => {
   try {
     const { id } = req.params;
-    const newData = req.body;
     const currentStackItem = await StackTechnologiesModel.findById(id);
-    // console.log("newData: ", newData);
-
-    let updatedStackItem = await StackTechnologiesModel.findByIdAndUpdate(
-      id,
-      newData,
-      {
-        new: true,
-      }
-    );
 
     // CHECK IF ITEM EXISTS
     if (!currentStackItem) {
       return nextCustomError("No Stack Item found!", 404, next);
     }
+
+    const updateData: any = {};
+    if (req.body.name !== undefined) updateData.name = req.body.name;
+    if (req.body.category !== undefined)
+      updateData.category = req.body.category;
+
+    let updatedStackItem = await StackTechnologiesModel.findByIdAndUpdate(
+      id,
+      updateData,
+      {
+        new: true,
+      }
+    );
 
     // MEDIA UPLOAD BEGIN //
     if (req.file) {

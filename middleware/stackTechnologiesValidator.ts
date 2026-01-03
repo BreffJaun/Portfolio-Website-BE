@@ -9,4 +9,9 @@ export const stackTechnologiesValidator = [
     .trim()
     .optional(),
   body("img").trim(),
+  body("category")
+    .optional()
+    .trim()
+    .isIn(["web", "mobile-ios", "mobile-android", "ux", "tools"])
+    .withMessage("Invalid category"),
 ];

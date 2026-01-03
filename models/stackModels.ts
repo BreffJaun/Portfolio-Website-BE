@@ -11,6 +11,12 @@ const stackItemSchema = new Schema<StackItem>(
   {
     name: { type: String, required: true },
     img: { type: String, required: true },
+    category: {
+      type: String,
+      required: true,
+      enum: ["web", "mobile-ios", "mobile-android", "ux", "tools"],
+      default: "web",
+    },
   },
   { strictQuery: true }
 );
