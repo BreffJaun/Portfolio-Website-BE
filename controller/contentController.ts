@@ -20,6 +20,10 @@ import {
   ProjectsModel,
   ProjectDescriptionModel,
 } from "../models/projectModels";
+import {
+  CertificatesModel,
+  CertificatesDescriptionModel,
+} from "../models/certificatesModels";
 
 import type { UserDocument } from "../models/userModel";
 import type { PatchUser } from "../types/interfaces";
@@ -193,20 +197,16 @@ export const postStackTechnologies = async (
   try {
     // console.log("Multer Output:", req.file);
     // console.log("Request Body:", req.body);
-    if (!req.body.name || !req.file) {
-      return res.status(400).json({ message: "Name or image file is missing" });
+    if (!req.body.name || !req.file || !req.body.category) {
+      return res.status(400).json({ message: "Missing data" });
     }
 
-    if (!req.body.category) {
-      return res.status(400).json({ message: "Category is missing" });
-    }
-
-    const newStackItem = {
+    const createdStackItem = await StackTechnologiesModel.create({
       name: req.body.name,
-      img: req.file.path,
+      img: "",
       category: req.body.category,
-    };
-    const createdStackItem = await StackTechnologiesModel.create(newStackItem);
+    });
+
     const id = createdStackItem._id;
 
     // MEDIA UPLOAD BEGIN //
@@ -221,7 +221,9 @@ export const postStackTechnologies = async (
     }
     // MEDIA UPLOAD END //
 
-    res.status(201).json({ content: createdStackItem });
+    const finalStackItem = await StackTechnologiesModel.findById(id);
+
+    res.status(201).json({ content: finalStackItem });
   } catch (err) {
     next(err);
   }
@@ -295,6 +297,176 @@ export const deleteStackTechnologies = async (
     // MEDIA DELETE ONLY IF IMAGE EXISTS
     if (currentStackItem.img) {
       await deleteFileFromCloudinary(currentStackItem.img, next);
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET CertificatesContent ✅
+export const getCertificatesContent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const description = await CertificatesDescriptionModel.findOne();
+    const certificates = await CertificatesModel.find();
+
+    if (!description) {
+      return nextCustomError("Content not found", 404, next);
+    }
+
+    const completeContent = {
+      headline: description.headline,
+      description: description.description,
+      certificates: certificates,
+    };
+
+    res.status(200).json({ content: completeContent });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PATCH CertificatesDescription ✅
+export const patchCertificatesDescription = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const newData = req.body;
+    const current = await CertificatesDescriptionModel.findOne();
+    const id = current?._id;
+
+    if (!current) {
+      return nextCustomError("No content found!", 404, next);
+    }
+
+    const updatedCertificatesDescription =
+      await CertificatesDescriptionModel.findByIdAndUpdate(id, newData, {
+        new: true,
+      });
+    res.status(200).json({ content: updatedCertificatesDescription });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST Certificates ✅
+export const postCertificates = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // console.log("Multer Output:", req.file);
+    // console.log("Request Body:", req.body);
+    const { title, category } = req.body;
+
+    if (!title || !category || !req.file) {
+      return res.status(400).json({ message: "Missing data" });
+    }
+
+    const createdCertificateItem = await CertificatesModel.create({
+      title: title,
+      category: category,
+      img: "",
+    });
+
+    const id = createdCertificateItem._id;
+
+    // MEDIA UPLOAD BEGIN //
+    await addFile(
+      req.file,
+      CertificatesModel,
+      id as Types.ObjectId,
+      "img",
+      next
+    );
+    // MEDIA UPLOAD END //
+
+    const finalCertificateItem = await CertificatesModel.findById(id);
+
+    res.status(201).json({ content: finalCertificateItem });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PATCH Certificates ✅
+export const patchCertificates = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const currentCertificateItem = await CertificatesModel.findById(id);
+
+    // CHECK IF CERTIFICATE EXISTS
+    if (!currentCertificateItem) {
+      return nextCustomError("No certificate found", 404, next);
+    }
+
+    const updateData: any = {};
+    if (req.body.title !== undefined) updateData.title = req.body.title;
+    if (req.body.category !== undefined)
+      updateData.category = req.body.category;
+
+    let updatedCertificateItem = await CertificatesModel.findByIdAndUpdate(
+      id,
+      updateData,
+      {
+        new: true,
+      }
+    );
+
+    // MEDIA UPLOAD BEGIN //
+    if (req.file) {
+      // console.log("req.file: ", req.file);
+      if (currentCertificateItem.img) {
+        await deleteFileFromCloudinary(currentCertificateItem.img, next);
+      }
+      await addFile(
+        req.file,
+        CertificatesModel,
+        currentCertificateItem._id as Types.ObjectId,
+        "img",
+        next
+      );
+    }
+    // MEDIA UPLOAD END //
+
+    updatedCertificateItem = await CertificatesModel.findById(id);
+    // console.log("updatedCertificateItem: ", updatedCertificateItem);
+    res.status(201).json({ content: updatedCertificateItem });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE Certificates ✅
+export const deleteCertificates = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const currentCertificateItem = await CertificatesModel.findByIdAndDelete(
+      id
+    );
+    if (!currentCertificateItem) {
+      return nextCustomError("No Certificate found!", 404, next);
+    }
+
+    // MEDIA DELETE ONLY IF IMAGE EXISTS
+    if (currentCertificateItem.img) {
+      await deleteFileFromCloudinary(currentCertificateItem.img, next);
     }
 
     res.status(204).end();

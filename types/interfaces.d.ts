@@ -72,6 +72,18 @@ export interface StackContent {
   stack: StackItem[];
 }
 
+export interface CertificateItem {
+  title: string;
+  img: string;
+  category: CertificateCategory;
+}
+
+export interface CertificatesContent {
+  headline: string;
+  description: string;
+  certificates: CertificateItem[];
+}
+
 export interface ProjectItem {
   order: number;
   img: string;

@@ -2,22 +2,22 @@
 import { body } from "express-validator";
 
 // C R E A T E   V A L I D A T O R
-export const stackTechnologiesValidator = [
-  body("name")
+export const certificatesValidator = [
+  body("title")
     .notEmpty()
-    .withMessage("Headline has to be set!")
+    .withMessage("Title has to be set!")
     .trim()
     .optional(),
   body("img").trim(),
   // body("img").custom((_, { req }) => {
   //   if (!req.file) {
-  //     throw new Error("Stack technology image is required");
+  //     throw new Error("Certificate image is required");
   //   }
   //   return true;
   // }),
   body("category")
-    .optional()
-    .trim()
-    .isIn(["web", "mobile-ios", "mobile-android", "ux", "tools"])
+    .notEmpty()
+    .withMessage("Category is required")
+    .isIn(["hard-skills", "soft-skills", "courses", "events"])
     .withMessage("Invalid category"),
 ];

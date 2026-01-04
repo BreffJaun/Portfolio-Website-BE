@@ -10,7 +10,7 @@ import type { StackContent, StackItem } from "../types/interfaces";
 const stackItemSchema = new Schema<StackItem>(
   {
     name: { type: String, required: true },
-    img: { type: String, required: true },
+    img: { type: String, required: false },
     category: {
       type: String,
       required: true,

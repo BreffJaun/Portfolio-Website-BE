@@ -11,6 +11,8 @@ import { stackTechnologiesValidator } from "../middleware/stackTechnologiesValid
 import { projectsValidator } from "../middleware/projectsValidator";
 import { projectsDescriptionValidator } from "../middleware/projectsDescriptionValidator";
 import { validateRequest } from "../middleware/validator";
+import { certificatesValidator } from "../middleware/certificatesValidator";
+import { certificatesDescriptionValidator } from "../middleware/certificateDescriptionValidator";
 
 // I M P O R T:  C O N T R O L L E R
 import {
@@ -28,6 +30,11 @@ import {
   postProjects,
   patchProjects,
   deleteProjects,
+  getCertificatesContent,
+  patchCertificatesDescription,
+  postCertificates,
+  patchCertificates,
+  deleteCertificates,
 } from "../controller/contentController";
 
 import { auth } from "../middleware/auth";
@@ -76,6 +83,25 @@ router
     patchStackTechnologies
   )
   .delete(deleteStackTechnologies);
+
+router.route("/certificates").get(getCertificatesContent);
+
+router
+  .route("/certificates/description")
+  .patch(
+    certificatesDescriptionValidator,
+    validateRequest,
+    patchCertificatesDescription
+  );
+
+router
+  .route("/certificates/items")
+  .post(uploadMedia, certificatesValidator, validateRequest, postCertificates);
+
+router
+  .route("/certificates/items/:id")
+  .patch(uploadMedia, certificatesValidator, validateRequest, patchCertificates)
+  .delete(deleteCertificates);
 
 router.route("/projects").get(getProjects);
 
