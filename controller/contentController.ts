@@ -356,7 +356,7 @@ export const patchCertificatesDescription = async (
   }
 };
 
-// POST Certificates ✅
+// POST Certificates ✅ 
 export const postCertificates = async (
   req: Request,
   res: Response,
@@ -365,13 +365,15 @@ export const postCertificates = async (
   try {
     // console.log("Multer Output:", req.file);
     // console.log("Request Body:", req.body);
-    const { title, category } = req.body;
 
-    if (!title || !category || !req.file) {
-      return res.status(400).json({ message: "Missing data" });
+    if (!req.body.order || !req.body.title || !req.body.category || !req.file) {
+      return res.status(400).json({ message: "Data not complete" });
     }
 
+    const { title, category, order } = req.body;
+
     const createdCertificateItem = await CertificatesModel.create({
+      order: order,
       title: title,
       category: category,
       img: "",
@@ -397,7 +399,7 @@ export const postCertificates = async (
   }
 };
 
-// PATCH Certificates ✅
+// PATCH Certificates ✅ 
 export const patchCertificates = async (
   req: Request,
   res: Response,
@@ -405,6 +407,7 @@ export const patchCertificates = async (
 ) => {
   try {
     const { id } = req.params;
+    const newData = req.body;
     const currentCertificateItem = await CertificatesModel.findById(id);
 
     // CHECK IF CERTIFICATE EXISTS
@@ -412,17 +415,14 @@ export const patchCertificates = async (
       return nextCustomError("No certificate found", 404, next);
     }
 
-    const updateData: any = {};
-    if (req.body.title !== undefined) updateData.title = req.body.title;
-    if (req.body.category !== undefined)
-      updateData.category = req.body.category;
+    if (newData.order !== undefined) {
+      newData.order = parseInt(newData.order, 10);
+    }
 
-    let updatedCertificateItem = await CertificatesModel.findByIdAndUpdate(
+    let updatedCertificate = await CertificatesModel.findByIdAndUpdate(
       id,
-      updateData,
-      {
-        new: true,
-      }
+      newData,
+      { new: true }
     );
 
     // MEDIA UPLOAD BEGIN //
@@ -441,9 +441,9 @@ export const patchCertificates = async (
     }
     // MEDIA UPLOAD END //
 
-    updatedCertificateItem = await CertificatesModel.findById(id);
-    // console.log("updatedCertificateItem: ", updatedCertificateItem);
-    res.status(201).json({ content: updatedCertificateItem });
+    updatedCertificate = await CertificatesModel.findById(id);
+    // console.log("updatedCertificate: ", updatedCertificate);
+    res.status(201).json({ content: updatedCertificate });
   } catch (err) {
     next(err);
   }

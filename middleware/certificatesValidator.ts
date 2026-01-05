@@ -3,6 +3,7 @@ import { body } from "express-validator";
 
 // C R E A T E   V A L I D A T O R
 export const certificatesValidator = [
+  body("order").notEmpty().withMessage("Order has to be set!"),
   body("title")
     .notEmpty()
     .withMessage("Title has to be set!")
@@ -18,6 +19,6 @@ export const certificatesValidator = [
   body("category")
     .notEmpty()
     .withMessage("Category is required")
-    .isIn(["hard-skills", "soft-skills", "courses", "events"])
+    .isIn(["web-development", "app-development", "soft-skills", "events"])
     .withMessage("Invalid category"),
 ];

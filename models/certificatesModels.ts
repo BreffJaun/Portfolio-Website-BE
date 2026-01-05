@@ -9,6 +9,7 @@ import type { CertificatesContent, CertificateItem } from "../types/interfaces";
 
 const certificateItemSchema = new Schema<CertificateItem>(
   {
+    order: { type: Number, required: true },
     title: {
       type: String,
       required: true,
@@ -21,8 +22,8 @@ const certificateItemSchema = new Schema<CertificateItem>(
     category: {
       type: String,
       required: true,
-      enum: ["hard-skills", "soft-skills", "courses", "events"],
-      default: "hard-skills",
+      enum: ["web-development", "app-development", "soft-skills", "events"],
+      default: "web-development",
     },
   },
   { strictQuery: true }

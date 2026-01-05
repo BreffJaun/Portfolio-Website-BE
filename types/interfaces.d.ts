@@ -73,6 +73,7 @@ export interface StackContent {
 }
 
 export interface CertificateItem {
+  order: number;
   title: string;
   img: string;
   category: CertificateCategory;
